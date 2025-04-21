@@ -1,14 +1,15 @@
+import { HexagonBackground } from "@/components/animate-ui/hexagon-background";
 import SortingVisualizer from "@/components/sorting-visualizer";
 
 export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8">
-      <div className="w-full max-w-5xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+    <HexagonBackground className="absolute inset-0 flex min-h-screen flex-col items-center justify-between p-8">
+      <div className="z-10 w-full max-w-5xl">
+        <h1 className="mb-6 text-center font-bold text-3xl">
           Sorting Algorithm Visualization
         </h1>
         <SortingVisualizer />
       </div>
-    </main>
+    </HexagonBackground>
   );
 }

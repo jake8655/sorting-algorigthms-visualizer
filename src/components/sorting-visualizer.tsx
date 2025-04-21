@@ -1,11 +1,9 @@
 "use client";
 
-// TODO: fix speed change not being reflected when changed during pause
-
-import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { RippleButton } from "@/components/animate-ui/ripple-button";
 import {
   Select,
   SelectContent,
@@ -13,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Play, Pause, RefreshCw, RotateCcw } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { SlidingNumber } from "./animate-ui/sliding-number";
 
 // Define the types for our data and animation states
 type BarData = {
@@ -24,19 +23,29 @@ type BarData = {
 };
 
 export default function SortingVisualizer() {
+  const [arrayLength, setArrayLength] = useState(20);
+
   const [data, setData] = useState<BarData[]>([]);
   const [originalData, setOriginalData] = useState<BarData[]>([]);
+
   const [isSorting, setIsSorting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [speed, setSpeed] = useState(50);
-  const [algorithm, setAlgorithm] = useState("bubble");
-  const svgRef = useRef<SVGSVGElement>(null);
   const pauseRef = useRef<boolean>(false);
   const cancelRef = useRef<boolean>(false);
+
+  const [speed, setSpeed] = useState(50);
+  // A ref is needed because the the state in useState would be encapsulated in the sorting algorithm closures
+  const speedRef = useRef<number>(speed);
+
+  const [algorithm, setAlgorithm] = useState<
+    "bubble" | "selection" | "insertion"
+  >("bubble");
+
+  const svgRef = useRef<SVGSVGElement>(null);
   const animationFrameId = useRef<number | null>(null);
 
   // Generate random data
-  const generateRandomData = (count = 20) => {
+  const generateRandomData = (count: number) => {
     const newData: BarData[] = [];
     for (let i = 0; i < count; i++) {
       newData.push({
@@ -52,49 +61,101 @@ export default function SortingVisualizer() {
 
   // Initialize data on component mount
   useEffect(() => {
-    generateRandomData();
+    generateRandomData(arrayLength);
     return () => {
       // Cleanup any animations on unmount
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, []);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Not needed with React Compiler (https://github.com/biomejs/biome/issues/5293)
+  }, [generateRandomData, arrayLength]);
+
+  useEffect(() => {
+    d3.select(svgRef.current).selectAll("*").remove();
+    // biome-ignore lint/correctness/useExhaustiveDependencies: This is an explicit effect
+  }, [arrayLength]);
 
   // Draw the visualization whenever data changes
   useEffect(() => {
-    if (!svgRef.current || data.length === 0) return;
+    if (!svgRef.current || data.length === 0) {
+      // Optionally clear SVG if data becomes empty
+      if (svgRef.current) {
+        d3.select(svgRef.current).selectAll("*").remove();
+      }
+      return;
+    }
 
     const svg = d3.select(svgRef.current);
     const width = svgRef.current.clientWidth;
-    const height = svgRef.current.clientHeight - 10;
+    const height = svgRef.current.clientHeight - 10; // Account for text above bars
+
+    // Calculate bar dimensions based on current data length
     const barWidth = (width / data.length) * 0.8;
     const barPadding = (width / data.length) * 0.2;
 
-    // Clear previous content
-    svg.selectAll("*").remove();
+    // --- D3 Update Pattern ---
 
-    // Create bars with transitions
+    // Bind data to group elements (g) with class "bar"
+    // Use originalIndex as the key function to track individual bars
     const bars = svg
-      .selectAll(".bar")
-      // @ts-expect-error bad types
-      .data(data, d => d.originalIndex) // Use originalIndex for data binding
+      .selectAll<SVGGElement, BarData>(".bar") // Explicitly type selection
+      .data(data, d => d.originalIndex.toString()); // Key must be a string
+
+    // Exit selection: Elements that are no longer in the data
+    bars
+      .exit()
+      .transition() // Start transition on exiting elements
+      .duration(300) // Animation duration for exit
+      .attr("opacity", 0) // Fade out
+      .remove(); // Remove the element after the transition finishes
+
+    // Enter selection: New elements that are in the data but not on screen
+    const enterBars = bars
       .enter()
-      .append("g")
+      .append("g") // Append a group for each bar
       .attr("class", "bar")
+      .attr("opacity", 0); // Start invisible for the enter transition
+
+    // Append rect and text to the entering groups
+    enterBars
+      .append("rect")
+      .attr("width", barWidth) // Initial width
+      .attr("rx", 2);
+
+    enterBars
+      .append("text")
+      .attr("x", barWidth / 2) // Text horizontal position relative to group
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .attr("fill", "currentColor");
+
+    // Update + Enter selection: Elements that are on screen (either new or existing)
+    // This is where you define the final state and transitions
+    const mergedBars = enterBars.merge(bars); // Combine enter and update selections
+
+    // Transition for the group (position and opacity)
+    mergedBars
+      .transition()
+      .duration(300) // Animation duration for position and appearance
+      .ease(d3.easeCubicInOut) // Add easing for smoother motion
+      // Use the index 'i' from the *current* data array for the position
       .attr(
         "transform",
         (_d, i) => `translate(${i * (barWidth + barPadding)}, 0)`,
-      );
+      )
+      .attr("opacity", 1); // Fade in new elements
 
-    // Add rectangles
-    bars
-      .append("rect")
-      .attr("y", d => height - (d.value * height) / 110)
-      .attr("width", barWidth)
-      .attr("height", d => (d.value * height) / 110)
-      .attr("rx", 2)
+    // Transition for the rectangle within the group (height, y-position, color)
+    mergedBars
+      .select("rect")
+      .transition()
+      .duration(300) // Match group duration
+      .ease(d3.easeCubicInOut)
+      .attr("y", d => height - (d.value * height) / 110) // Animate from old y to new y
+      .attr("height", d => (d.value * height) / 110) // Animate from old height to new height
       .attr("fill", d => {
+        // Animate color changes
         switch (d.state) {
           case "comparing":
             return "#FF5733"; // Orange for comparing
@@ -107,16 +168,15 @@ export default function SortingVisualizer() {
         }
       });
 
-    // Add text labels
-    bars
-      .append("text")
-      .text(d => d.value)
-      .attr("x", barWidth / 2)
-      .attr("y", d => height - (d.value * height) / 110 - 5)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "10px")
-      .attr("fill", "currentColor");
-  }, [data]);
+    // Transition for the text within the group (y-position and text content)
+    mergedBars
+      .select("text")
+      .transition()
+      .duration(300) // Match group duration
+      .ease(d3.easeCubicInOut)
+      .text(d => d.value) // Update text content (instantly)
+      .attr("y", d => height - (d.value * height) / 110 - 5); // Animate text position
+  }, [data]); // Rerun effect when data changes
 
   // Helper function to wait for a specified time
   const sleep = async (ms: number) => {
@@ -147,7 +207,7 @@ export default function SortingVisualizer() {
   };
 
   // Helper function to get animation delay based on speed
-  const getDelay = () => Math.max(50, 1000 - speed * 9);
+  const getDelay = () => Math.max(50, 1000 - speedRef.current * 9);
 
   // Bubble sort implementation with animation
   const bubbleSort = async () => {
@@ -441,7 +501,7 @@ export default function SortingVisualizer() {
     setIsPaused(false);
 
     // Generate new data
-    generateRandomData();
+    generateRandomData(arrayLength);
   };
 
   // Toggle pause/resume
@@ -455,47 +515,53 @@ export default function SortingVisualizer() {
   const startSorting = () => {
     if (isSorting) return;
 
-    if (algorithm === "bubble") {
-      bubbleSort();
-    } else if (algorithm === "selection") {
-      selectionSort();
-    } else if (algorithm === "insertion") {
-      insertionSort();
+    switch (algorithm) {
+      case "bubble":
+        bubbleSort();
+        break;
+      case "selection":
+        selectionSort();
+        break;
+      case "insertion":
+        insertionSort();
+        break;
+      default:
+        break;
     }
   };
 
   return (
-    <div className="w-full flex flex-col gap-6">
-      <div className="flex flex-wrap gap-4 justify-between items-center">
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex gap-2">
           {!isSorting ? (
-            <Button onClick={startSorting} variant="default">
-              <Play className="w-4 h-4 mr-2" />
+            <RippleButton onClick={startSorting} variant="default">
+              <Play className="mr-2 h-4 w-4" />
               Start Sorting
-            </Button>
+            </RippleButton>
           ) : (
-            <Button
+            <RippleButton
               onClick={togglePause}
               variant={isPaused ? "default" : "secondary"}
             >
               {isPaused ? (
-                <Play className="w-4 h-4 mr-2" />
+                <Play className="mr-2 h-4 w-4" />
               ) : (
-                <Pause className="w-4 h-4 mr-2" />
+                <Pause className="mr-2 h-4 w-4" />
               )}
               {isPaused ? "Resume" : "Pause"}
-            </Button>
+            </RippleButton>
           )}
 
-          <Button onClick={resetToOriginal} variant="outline">
-            <RotateCcw className="w-4 h-4 mr-2" />
+          <RippleButton onClick={resetToOriginal} variant="outline">
+            <RotateCcw className="mr-2 h-4 w-4" />
             Reset
-          </Button>
+          </RippleButton>
 
-          <Button onClick={generateNew} variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" />
+          <RippleButton onClick={generateNew} variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
             New Data
-          </Button>
+          </RippleButton>
         </div>
 
         <div className="flex items-center gap-4">
@@ -503,18 +569,24 @@ export default function SortingVisualizer() {
             <span className="text-sm">Speed:</span>
             <Slider
               value={[speed]}
-              onValueChange={value => setSpeed(value[0]!)}
+              onValueChange={value => {
+                setSpeed(value[0]!);
+                speedRef.current = value[0]!;
+              }}
               min={1}
               max={100}
               step={1}
               className="w-32"
               disabled={!isPaused && isSorting}
             />
+            <SlidingNumber number={speed} />
           </div>
 
           <Select
             value={algorithm}
-            onValueChange={setAlgorithm}
+            onValueChange={val =>
+              setAlgorithm(val as "bubble" | "selection" | "insertion")
+            }
             disabled={isSorting}
           >
             <SelectTrigger className="w-[180px]">
@@ -529,26 +601,40 @@ export default function SortingVisualizer() {
         </div>
       </div>
 
-      <div className="w-full border rounded-lg bg-card min-h-[550px] flex items-end justify-center p-4">
+      <div className="flex min-h-[550px] w-full items-end justify-center rounded-lg border bg-card/50 p-4">
         <svg ref={svgRef} height="530" className="w-[calc(100%-16px)]"></svg>
       </div>
 
-      <div className="flex gap-4 mt-2 flex-wrap">
+      <div className="mt-2 flex flex-wrap gap-4">
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 rounded-sm bg-[#3B82F6]"></div>
+          <div className="h-4 w-4 rounded-sm bg-[#3B82F6]"></div>
           <span className="text-sm">Unsorted</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 rounded-sm bg-[#FF5733]"></div>
+          <div className="h-4 w-4 rounded-sm bg-[#FF5733]"></div>
           <span className="text-sm">Comparing</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 rounded-sm bg-[#FFD700]"></div>
+          <div className="h-4 w-4 rounded-sm bg-[#FFD700]"></div>
           <span className="text-sm">Current Element</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 rounded-sm bg-[#33FF57]"></div>
+          <div className="h-4 w-4 rounded-sm bg-[#33FF57]"></div>
           <span className="text-sm">Sorted</span>
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-sm">Length:</span>
+          <Slider
+            value={[arrayLength]}
+            onValueChange={value => setArrayLength(value[0]!)}
+            min={10}
+            max={100}
+            step={1}
+            className="w-32"
+            disabled={isSorting}
+          />
+          <SlidingNumber number={arrayLength} />
         </div>
       </div>
     </div>
