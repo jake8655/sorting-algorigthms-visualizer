@@ -1,16 +1,62 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+// @ts-check
+
 import { FlatCompat } from "@eslint/eslintrc";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: import.meta.dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+/** @type {import("eslint").Linter.Config[]} */
+const config = [
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+  },
+  ...compat.config({
+    extends: ["next/core-web-vitals", "next/typescript"],
+    plugins: ["react-compiler"],
+
+    rules: {
+      "react-compiler/react-compiler": "error",
+      "react/no-unescaped-entities": "off",
+
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          prefer: "type-imports",
+          fixStyle: "inline-type-imports",
+        },
+      ],
+
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+        },
+      ],
+
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: {
+            attributes: false,
+          },
+        },
+      ],
+
+      "@typescript-eslint/no-require-imports": ["off"],
+
+      "react-hooks/exhaustive-deps": ["off"],
+    },
+  }),
 ];
 
-export default eslintConfig;
+export default config;
