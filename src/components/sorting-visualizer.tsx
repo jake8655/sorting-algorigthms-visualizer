@@ -43,7 +43,7 @@ export default function SortingVisualizer({
   const speedRef = useRef<number>(speed);
 
   const [algorithm, setAlgorithm] = useState<
-    "bubble" | "selection" | "insertion"
+    "bubble" | "selection" | "insertion" | "quicksort"
   >("bubble");
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -468,6 +468,201 @@ export default function SortingVisualizer({
     setIsSorting(false);
   };
 
+  // Quicksort implementation with animation
+  const quickSort = async () => {
+    if (isSorting) return;
+
+    setIsSorting(true);
+    pauseRef.current = false;
+    cancelRef.current = false;
+
+    // Create a working copy of the data
+    let workingData = [...data];
+    const n = workingData.length;
+
+    // Reset all states
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "default",
+    }));
+
+    setData([...workingData]);
+    await sleep(getDelay() / 2);
+
+    // Recursive quicksort function
+    const quickSortRecursive = async (left: number, right: number) => {
+      if (cancelRef.current) {
+        return;
+      }
+
+      if (left < right) {
+        // Partition the array
+        await medianOfThree(left, right);
+
+        const pivotIndex = await partition(left, right);
+
+        // Mark pivot as sorted
+        workingData[pivotIndex]!.state = "sorted";
+        setData([...workingData]);
+        await sleep(getDelay());
+
+        // Recursively sort the sub-arrays
+        await quickSortRecursive(left, pivotIndex - 1);
+        await quickSortRecursive(pivotIndex + 1, right);
+      } else if (left === right) {
+        // Single element is already sorted
+        workingData[left]!.state = "sorted";
+        setData([...workingData]);
+        await sleep(getDelay() / 2);
+      }
+    };
+
+    // Partition function for quicksort
+    const partition = async (left: number, right: number) => {
+      const pivotValue = workingData[right]!.value;
+      let i = left - 1;
+
+      // Highlight the pivot
+      workingData[right]!.state = "current";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      for (let j = left; j < right; j++) {
+        if (cancelRef.current) {
+          return left;
+        }
+
+        // Mark current element being compared
+        workingData[j]!.state = "comparing";
+        setData([...workingData]);
+        await sleep(getDelay());
+
+        if (workingData[j]!.value < pivotValue) {
+          i++;
+
+          // Highlight elements to be swapped
+          if (i !== j) {
+            workingData[i]!.state = "comparing";
+            setData([...workingData]);
+            await sleep(getDelay());
+
+            // Swap elements
+            const temp = workingData[i]!;
+            workingData[i] = workingData[j]!;
+            workingData[j] = temp;
+
+            setData([...workingData]);
+            await sleep(getDelay());
+          }
+        }
+
+        // Reset current element state
+        workingData[j]!.state = "default";
+        setData([...workingData]);
+      }
+
+      // Swap pivot with element at i+1
+      i++;
+
+      // Highlight elements to be swapped
+      workingData[i]!.state = "comparing";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      // Perform the swap
+      const temp = workingData[i]!;
+      workingData[i] = workingData[right]!;
+      workingData[right] = temp;
+
+      // Update visualization
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      // Reset states except for the pivot position
+      for (let j = left; j <= right; j++) {
+        if (j !== i) {
+          workingData[j]!.state = "default";
+        }
+      }
+
+      setData([...workingData]);
+      await sleep(getDelay() / 2);
+
+      return i;
+    };
+
+    const medianOfThree = async (left: number, right: number) => {
+      const mid = Math.floor((left + right) / 2);
+
+      // Sort the three elements
+      workingData[left]!.state = "comparing";
+      workingData[mid]!.state = "comparing";
+      setData([...workingData]);
+      await sleep(getDelay());
+      if (workingData[left]!.value > workingData[mid]!.value) {
+        const temp = workingData[left]!;
+        workingData[left] = workingData[mid]!;
+        workingData[mid] = temp;
+      }
+      workingData[left]!.state = "default";
+      workingData[mid]!.state = "default";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      workingData[left]!.state = "comparing";
+      workingData[right]!.state = "comparing";
+      setData([...workingData]);
+      await sleep(getDelay());
+      if (workingData[left]!.value > workingData[right]!.value) {
+        const temp = workingData[left]!;
+        workingData[left] = workingData[right]!;
+        workingData[right] = temp;
+      }
+      workingData[left]!.state = "default";
+      workingData[right]!.state = "default";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      workingData[mid]!.state = "comparing";
+      workingData[right]!.state = "comparing";
+      setData([...workingData]);
+      await sleep(getDelay());
+      if (workingData[mid]!.value > workingData[right]!.value) {
+        const temp = workingData[mid]!;
+        workingData[mid] = workingData[right]!;
+        workingData[right] = temp;
+      }
+      workingData[mid]!.state = "default";
+      workingData[right]!.state = "default";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      workingData[mid]!.state = "comparing";
+      workingData[right]!.state = "comparing";
+      setData([...workingData]);
+      await sleep(getDelay());
+      const temp = workingData[mid]!;
+      workingData[mid] = workingData[right]!;
+      workingData[right] = temp;
+      workingData[mid]!.state = "default";
+      workingData[right]!.state = "default";
+      setData([...workingData]);
+      await sleep(getDelay());
+
+      return right;
+    };
+
+    await quickSortRecursive(0, n - 1);
+
+    // Mark all elements as sorted when done
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "sorted",
+    }));
+    setData([...workingData]);
+    setIsSorting(false);
+  };
+
   // Reset to original unsorted state
   const resetToOriginal = () => {
     // Cancel any ongoing sorting
@@ -529,6 +724,9 @@ export default function SortingVisualizer({
         break;
       case "insertion":
         insertionSort();
+        break;
+      case "quicksort":
+        quickSort();
         break;
       default:
         break;
@@ -614,6 +812,7 @@ export default function SortingVisualizer({
               <SelectItem value="bubble">Bubble Sort</SelectItem>
               <SelectItem value="selection">Selection Sort</SelectItem>
               <SelectItem value="insertion">Insertion Sort</SelectItem>
+              <SelectItem value="quicksort">Quick Sort</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -634,7 +833,9 @@ export default function SortingVisualizer({
         </div>
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#FFD700]"></div>
-          <span className="text-sm">Current Element</span>
+          <span className="text-sm">
+            {algorithm === "quicksort" ? "Pivot" : "Current Element"}
+          </span>
         </div>
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#33FF57]"></div>
