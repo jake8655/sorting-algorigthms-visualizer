@@ -1,5 +1,7 @@
 "use client";
 
+// TODO: fix speed change not being reflected when changed during pause
+
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { Button } from "@/components/ui/button";
@@ -65,7 +67,7 @@ export default function SortingVisualizer() {
 
     const svg = d3.select(svgRef.current);
     const width = svgRef.current.clientWidth;
-    const height = svgRef.current.clientHeight;
+    const height = svgRef.current.clientHeight - 10;
     const barWidth = (width / data.length) * 0.8;
     const barPadding = (width / data.length) * 0.2;
 
@@ -357,10 +359,10 @@ export default function SortingVisualizer() {
       // Store the current element to be inserted
       const key = workingData[i]!.value;
       const currentItem = { ...workingData[i]! };
-      currentItem.state = "current";
+      currentItem.state = "comparing";
 
       // Mark current element
-      workingData[i]!.state = "current";
+      workingData[i]!.state = "comparing";
       setData([...workingData]);
       await sleep(getDelay());
 
@@ -374,16 +376,14 @@ export default function SortingVisualizer() {
           return;
         }
 
+        const temp = workingData[j]!;
+        workingData[j] = { ...currentItem, state: "current" };
+
         // Mark element being compared
-        workingData[j]!.state = "comparing";
         setData([...workingData]);
-        await sleep(getDelay());
 
         // Shift element to the right
-        workingData[j + 1] = { ...workingData[j]!, state: "default" };
-
-        // Reset comparison state but keep sorted state
-        workingData[j]!.state = "sorted";
+        workingData[j + 1] = { ...temp, state: "sorted" };
 
         j--;
 
@@ -508,6 +508,7 @@ export default function SortingVisualizer() {
               max={100}
               step={1}
               className="w-32"
+              disabled={!isPaused && isSorting}
             />
           </div>
 
@@ -528,8 +529,8 @@ export default function SortingVisualizer() {
         </div>
       </div>
 
-      <div className="w-full border rounded-lg bg-card min-h-[600px] flex items-end justify-center p-4">
-        <svg ref={svgRef} height="570" className="w-[calc(100%-16px)]"></svg>
+      <div className="w-full border rounded-lg bg-card min-h-[550px] flex items-end justify-center p-4">
+        <svg ref={svgRef} height="530" className="w-[calc(100%-16px)]"></svg>
       </div>
 
       <div className="flex gap-4 mt-2 flex-wrap">
