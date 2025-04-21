@@ -18,6 +18,7 @@ type BarData = {
   value: number;
   index: number;
   state: "default" | "comparing" | "sorted" | "current";
+  originalIndex: number; // To track original position
 };
 
 export default function SortingVisualizer() {
@@ -28,25 +29,34 @@ export default function SortingVisualizer() {
   const [speed, setSpeed] = useState(50);
   const [algorithm, setAlgorithm] = useState("bubble");
   const svgRef = useRef<SVGSVGElement>(null);
-  const sortingRef = useRef<{ cancel: boolean }>({ cancel: false });
+  const pauseRef = useRef<boolean>(false);
+  const cancelRef = useRef<boolean>(false);
+  const animationFrameId = useRef<number | null>(null);
 
   // Generate random data
   const generateRandomData = (count = 20) => {
     const newData: BarData[] = [];
     for (let i = 0; i < count; i++) {
       newData.push({
-        value: Math.floor(Math.random() * 100) + 10,
+        value: Math.floor(Math.random() * 90) + 10,
         index: i,
         state: "default",
+        originalIndex: i,
       });
     }
     setData([...newData]);
-    setOriginalData([...newData]);
+    setOriginalData(JSON.parse(JSON.stringify(newData)));
   };
 
   // Initialize data on component mount
   useEffect(() => {
     generateRandomData();
+    return () => {
+      // Cleanup any animations on unmount
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
   }, []);
 
   // Draw the visualization whenever data changes
@@ -57,40 +67,46 @@ export default function SortingVisualizer() {
     const width = svgRef.current.clientWidth;
     const height = svgRef.current.clientHeight;
     const barWidth = (width / data.length) * 0.8;
-    const _barPadding = (width / data.length) * 0.2;
+    const barPadding = (width / data.length) * 0.2;
 
-    // Create a scale for x positions
-    const xScale = d3.scaleLinear().domain([0, data.length]).range([0, width]);
+    // Clear previous content
+    svg.selectAll("*").remove();
 
-    // Clear previous content if needed
-    if (svg.selectAll("g").empty()) {
-      svg.selectAll("*").remove();
-    }
-
-    // Update or create groups for each bar
-    // @ts-expect-error bad types
-    const bars = svg.selectAll("g").data(data, d => d.index);
-
-    // Remove any exiting bars
-    bars.exit().remove();
-
-    // Add new bars
-    const enterBars = bars
+    // Create bars with transitions
+    const bars = svg
+      .selectAll(".bar")
+      // @ts-expect-error bad types
+      .data(data, d => d.originalIndex) // Use originalIndex for data binding
       .enter()
       .append("g")
-      .attr("transform", (_d, i) => `translate(${xScale(i)}, 0)`);
+      .attr("class", "bar")
+      .attr(
+        "transform",
+        (_d, i) => `translate(${i * (barWidth + barPadding)}, 0)`,
+      );
 
-    // Add rectangles to new groups
-    enterBars
+    // Add rectangles
+    bars
       .append("rect")
       .attr("y", d => height - (d.value * height) / 110)
       .attr("width", barWidth)
       .attr("height", d => (d.value * height) / 110)
       .attr("rx", 2)
-      .attr("fill", getColorForState);
+      .attr("fill", d => {
+        switch (d.state) {
+          case "comparing":
+            return "#FF5733"; // Orange for comparing
+          case "sorted":
+            return "#33FF57"; // Green for sorted
+          case "current":
+            return "#FFD700"; // Gold for current element
+          default:
+            return "#3B82F6"; // Blue for default
+        }
+      });
 
-    // Add text labels to new groups
-    enterBars
+    // Add text labels
+    bars
       .append("text")
       .text(d => d.value)
       .attr("x", barWidth / 2)
@@ -98,302 +114,289 @@ export default function SortingVisualizer() {
       .attr("text-anchor", "middle")
       .attr("font-size", "10px")
       .attr("fill", "currentColor");
-
-    // Update existing bars with transitions
-    const allBars = svg.selectAll("g");
-
-    // Transition for the groups (position)
-    allBars
-      .transition()
-      .duration(300)
-      .attr("transform", (_d, i) => `translate(${xScale(i)}, 0)`);
-
-    // Update rectangle colors
-    allBars
-      .select("rect")
-      .transition()
-      .duration(300)
-      // @ts-expect-error bad types
-      .attr("fill", getColorForState);
-
-    // Update text positions
-    allBars
-      .select("text")
-      // @ts-expect-error bad types
-      .text(d => d.value)
-      .transition()
-      .duration(300)
-      // @ts-expect-error bad types
-      .attr("y", d => height - (d.value * height) / 110 - 5);
-
-    function getColorForState(d: BarData) {
-      switch (d.state) {
-        case "comparing":
-          return "#FF5733"; // Orange for comparing
-        case "sorted":
-          return "#33FF57"; // Green for sorted
-        case "current":
-          return "#FFD700"; // Gold for current element in insertion sort
-        default:
-          return "#3B82F6"; // Blue for default
-      }
-    }
   }, [data]);
 
   // Helper function to wait for a specified time
-  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+  const sleep = async (ms: number) => {
+    return new Promise<void>(resolve => {
+      const startTime = Date.now();
+
+      const checkPause = () => {
+        if (cancelRef.current) {
+          resolve();
+          return;
+        }
+
+        if (pauseRef.current) {
+          animationFrameId.current = requestAnimationFrame(checkPause);
+          return;
+        }
+
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime >= ms) {
+          resolve();
+        } else {
+          animationFrameId.current = requestAnimationFrame(checkPause);
+        }
+      };
+
+      checkPause();
+    });
+  };
 
   // Helper function to get animation delay based on speed
-  const getDelay = () => 1000 - speed * 9;
-
-  // Helper function to update data with transitions
-  const updateData = (newData: BarData[]) => {
-    setData([...newData]);
-  };
+  const getDelay = () => Math.max(50, 1000 - speed * 9);
 
   // Bubble sort implementation with animation
   const bubbleSort = async () => {
-    if (isSorting && !isPaused) return;
+    if (isSorting) return;
 
     setIsSorting(true);
-    setIsPaused(false);
-    sortingRef.current.cancel = false;
+    pauseRef.current = false;
+    cancelRef.current = false;
 
-    const newData = [...data];
-    const n = newData.length;
+    // Create a working copy of the data
+    let workingData = [...data];
+    const n = workingData.length;
 
-    // If we're resuming, find where we left off
-    let startJ = 0;
-    const startI = 0;
+    // Reset all states
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "default",
+    }));
 
-    // Count how many elements are already sorted
-    const sortedCount = newData.filter(item => item.state === "sorted").length;
-    if (sortedCount > 0) {
-      startJ = sortedCount;
-    }
+    setData([...workingData]);
+    await sleep(getDelay() / 2);
 
     // Main bubble sort loop
-    for (let j = startJ; j < n - 1; j++) {
+    for (let i = 0; i < n - 1; i++) {
       let swapped = false;
 
-      for (let i = 0; i < n - j - 1; i++) {
-        // Check if sorting was cancelled
-        if (sortingRef.current.cancel) return;
-
-        // Check if sorting is paused
-        while (isPaused) {
-          await sleep(100);
-          if (sortingRef.current.cancel) return;
+      for (let j = 0; j < n - i - 1; j++) {
+        if (cancelRef.current) {
+          setIsSorting(false);
+          return;
         }
 
-        // Mark the two elements being compared
-        newData.forEach(item => {
-          if (item.state === "comparing") item.state = "default";
-        });
-
-        newData[i]!.state = "comparing";
-        newData[i + 1]!.state = "comparing";
-        updateData(newData);
-
-        // Wait for visualization to update
+        // Mark elements being compared
+        workingData[j]!.state = "comparing";
+        workingData[j + 1]!.state = "comparing";
+        setData([...workingData]);
         await sleep(getDelay());
 
-        // Check if swap is needed
-        if (newData[i]!.value > newData[i + 1]!.value) {
-          // Perform the swap in our data array
-          const temp = newData[i]!;
-          newData[i] = newData[i + 1]!;
-          newData[i + 1] = temp;
-
-          // Update visualization with the swap
-          updateData(newData);
+        // Compare and swap if needed
+        if (workingData[j]!.value > workingData[j + 1]!.value) {
+          // Swap elements
+          const temp = workingData[j]!;
+          workingData[j] = workingData[j + 1]!;
+          workingData[j + 1] = temp;
           swapped = true;
 
-          // Wait for the animation to complete
+          // Update visualization
+          setData([...workingData]);
           await sleep(getDelay());
         }
+
+        // Reset comparison state
+        workingData[j]!.state = "default";
+        workingData[j + 1]!.state = j === n - i - 2 ? "sorted" : "default";
+        setData([...workingData]);
       }
 
-      // Mark the last element as sorted
-      newData[n - j - 1]!.state = "sorted";
-      updateData(newData);
-
-      if (!swapped) break;
+      if (!swapped) {
+        // If no swaps were made, the array is sorted
+        break;
+      }
     }
 
-    // Mark all remaining elements as sorted
-    newData.forEach(item => {
-      if (item.state !== "sorted") item.state = "sorted";
-    });
-    updateData(newData);
+    // Mark all elements as sorted
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "sorted",
+    }));
+    setData([...workingData]);
 
     setIsSorting(false);
   };
 
   // Selection sort implementation with animation
   const selectionSort = async () => {
-    if (isSorting && !isPaused) return;
+    if (isSorting) return;
 
     setIsSorting(true);
-    setIsPaused(false);
-    sortingRef.current.cancel = false;
+    pauseRef.current = false;
+    cancelRef.current = false;
 
-    const newData = [...data];
-    const n = newData.length;
+    // Create a working copy of the data
+    let workingData = [...data];
+    const n = workingData.length;
 
-    // Find where we left off if resuming
-    let startI = 0;
-    const sortedCount = newData.filter(item => item.state === "sorted").length;
-    if (sortedCount > 0) {
-      startI = sortedCount;
-    }
+    // Reset all states
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "default",
+    }));
+
+    setData([...workingData]);
+    await sleep(getDelay() / 2);
 
     // Main selection sort loop
-    for (let i = startI; i < n - 1; i++) {
-      // Find the minimum element in the unsorted part
-      let minIndex = i;
+    for (let i = 0; i < n - 1; i++) {
+      if (cancelRef.current) {
+        setIsSorting(false);
+        return;
+      }
 
-      // Mark current position
-      newData[i]!.state = "comparing";
-      updateData(newData);
+      // Assume the minimum is the first unsorted element
+      let minIdx = i;
+      workingData[i]!.state = "comparing";
+      setData([...workingData]);
       await sleep(getDelay());
 
+      // Find the minimum element in the unsorted part
       for (let j = i + 1; j < n; j++) {
-        // Check if sorting was cancelled
-        if (sortingRef.current.cancel) return;
-
-        // Check if sorting is paused
-        while (isPaused) {
-          await sleep(100);
-          if (sortingRef.current.cancel) return;
+        if (cancelRef.current) {
+          setIsSorting(false);
+          return;
         }
-
-        // Reset previous comparison
-        newData.forEach((item, idx) => {
-          if (idx !== i && idx !== minIndex && item.state !== "sorted") {
-            item.state = "default";
-          }
-        });
 
         // Mark current element being compared
-        newData[j]!.state = "comparing";
-        updateData(newData);
+        workingData[j]!.state = "comparing";
+        setData([...workingData]);
         await sleep(getDelay());
 
-        if (newData[j]!.value < newData[minIndex]!.value) {
-          // Reset previous minimum
-          if (minIndex !== i) {
-            newData[minIndex]!.state = "default";
+        if (workingData[j]!.value < workingData[minIdx]!.value) {
+          // Reset previous minimum if it's not the initial position
+          if (minIdx !== i) {
+            workingData[minIdx]!.state = "default";
           }
-          minIndex = j;
-          newData[minIndex]!.state = "current";
-          updateData(newData);
-          await sleep(getDelay() / 2);
+
+          minIdx = j;
+          workingData[j]!.state = "current"; // Mark as current minimum
         } else {
-          // Reset current comparison if not the new minimum
-          newData[j]!.state = "default";
-          updateData(newData);
+          // Reset if not the minimum
+          workingData[j]!.state = "default";
+        }
+
+        setData([...workingData]);
+        await sleep(getDelay() / 2);
+      }
+
+      // Swap the found minimum with the first unsorted element
+      if (minIdx !== i) {
+        // Reset states before swap
+        workingData[i]!.state = "comparing";
+        workingData[minIdx]!.state = "comparing";
+        setData([...workingData]);
+        await sleep(getDelay());
+
+        // Perform swap
+        const temp = workingData[i]!;
+        workingData[i] = workingData[minIdx]!;
+        workingData[minIdx] = temp;
+
+        // Update visualization
+        setData([...workingData]);
+        await sleep(getDelay());
+      }
+
+      // Mark current position as sorted
+      workingData[i]!.state = "sorted";
+
+      // Reset any remaining comparing states
+      for (let j = i + 1; j < n; j++) {
+        if (
+          workingData[j]!.state === "comparing" ||
+          workingData[j]!.state === "current"
+        ) {
+          workingData[j]!.state = "default";
         }
       }
 
-      // Swap the found minimum element with the first element
-      if (minIndex !== i) {
-        const temp = newData[i]!;
-        newData[i] = newData[minIndex]!;
-        newData[minIndex] = temp;
-
-        // Update visualization with the swap
-        updateData(newData);
-        await sleep(getDelay());
-      }
-
-      // Mark the element as sorted
-      newData[i]!.state = "sorted";
-      updateData(newData);
+      setData([...workingData]);
+      await sleep(getDelay() / 2);
     }
 
     // Mark the last element as sorted
-    newData[n - 1]!.state = "sorted";
-    updateData(newData);
+    workingData[n - 1]!.state = "sorted";
+    setData([...workingData]);
 
     setIsSorting(false);
   };
 
   // Insertion sort implementation with animation
   const insertionSort = async () => {
-    if (isSorting && !isPaused) return;
+    if (isSorting) return;
 
     setIsSorting(true);
-    setIsPaused(false);
-    sortingRef.current.cancel = false;
+    pauseRef.current = false;
+    cancelRef.current = false;
 
-    const newData = [...data];
-    const n = newData.length;
+    // Create a working copy of the data
+    let workingData = [...data];
+    const n = workingData.length;
 
-    // Find where we left off if resuming
-    let startI = 1;
-    const sortedCount = newData.filter(item => item.state === "sorted").length;
-    if (sortedCount > 0) {
-      startI = sortedCount;
-    }
+    // Reset all states
+    workingData = workingData.map(item => ({
+      ...item,
+      state: "default",
+    }));
 
     // Mark the first element as sorted initially
-    if (startI === 1) {
-      newData[0]!.state = "sorted";
-      updateData(newData);
-      await sleep(getDelay());
-    }
+    workingData[0]!.state = "sorted";
+    setData([...workingData]);
+    await sleep(getDelay());
 
     // Main insertion sort loop
-    for (let i = startI; i < n; i++) {
+    for (let i = 1; i < n; i++) {
+      if (cancelRef.current) {
+        setIsSorting(false);
+        return;
+      }
+
       // Store the current element to be inserted
-      const current = newData[i];
-      current!.state = "current";
-      updateData(newData);
+      const key = workingData[i]!.value;
+      const currentItem = { ...workingData[i]! };
+      currentItem.state = "current";
+
+      // Mark current element
+      workingData[i]!.state = "current";
+      setData([...workingData]);
       await sleep(getDelay());
 
       // Find the position to insert the current element
       let j = i - 1;
 
-      while (j >= 0) {
-        // Check if sorting was cancelled
-        if (sortingRef.current.cancel) return;
-
-        // Check if sorting is paused
-        while (isPaused) {
-          await sleep(100);
-          if (sortingRef.current.cancel) return;
+      // Compare with each element in the sorted part
+      while (j >= 0 && workingData[j]!.value > key) {
+        if (cancelRef.current) {
+          setIsSorting(false);
+          return;
         }
 
-        // Mark elements being compared
-        newData[j]!.state = "comparing";
-        updateData(newData);
+        // Mark element being compared
+        workingData[j]!.state = "comparing";
+        setData([...workingData]);
         await sleep(getDelay());
 
-        if (newData[j]!.value > current!.value) {
-          // Shift elements to the right
-          newData[j + 1] = newData[j]!;
-          j--;
+        // Shift element to the right
+        workingData[j + 1] = { ...workingData[j]!, state: "default" };
 
-          // Update visualization with the shift
-          updateData(newData);
-          await sleep(getDelay());
-        } else {
-          // Reset comparison state
-          newData[j]!.state = "sorted";
-          break;
-        }
+        // Reset comparison state but keep sorted state
+        workingData[j]!.state = "sorted";
 
-        // Reset comparison state
-        newData[j + 1]!.state = "sorted";
+        j--;
+
+        // Update visualization with the shift
+        setData([...workingData]);
+        await sleep(getDelay());
       }
 
       // Insert the current element at the correct position
-      newData[j + 1] = current!;
-      newData[j + 1]!.state = "sorted";
+      workingData[j + 1] = { ...currentItem, state: "sorted" };
 
       // Update visualization with the insertion
-      updateData(newData);
+      setData([...workingData]);
       await sleep(getDelay());
     }
 
@@ -402,11 +405,19 @@ export default function SortingVisualizer() {
 
   // Reset to original unsorted state
   const resetToOriginal = () => {
-    sortingRef.current.cancel = true;
+    // Cancel any ongoing sorting
+    cancelRef.current = true;
+    pauseRef.current = false;
+
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
+    }
+
     setIsSorting(false);
     setIsPaused(false);
 
-    // Create a deep copy of the original data with all states reset to default
+    // Reset to original data with default states
     const resetData = originalData.map(item => ({
       ...item,
       state: "default" as const,
@@ -417,19 +428,33 @@ export default function SortingVisualizer() {
 
   // Generate new random data
   const generateNew = () => {
-    sortingRef.current.cancel = true;
+    // Cancel any ongoing sorting
+    cancelRef.current = true;
+    pauseRef.current = false;
+
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
+    }
+
     setIsSorting(false);
     setIsPaused(false);
+
+    // Generate new data
     generateRandomData();
   };
 
   // Toggle pause/resume
   const togglePause = () => {
-    setIsPaused(!isPaused);
+    const newPausedState = !isPaused;
+    setIsPaused(newPausedState);
+    pauseRef.current = newPausedState;
   };
 
   // Start sorting based on selected algorithm
   const startSorting = () => {
+    if (isSorting) return;
+
     if (algorithm === "bubble") {
       bubbleSort();
     } else if (algorithm === "selection") {
@@ -489,7 +514,7 @@ export default function SortingVisualizer() {
           <Select
             value={algorithm}
             onValueChange={setAlgorithm}
-            disabled={isSorting && !isPaused}
+            disabled={isSorting}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select Algorithm" />
@@ -503,8 +528,8 @@ export default function SortingVisualizer() {
         </div>
       </div>
 
-      <div className="w-full border rounded-lg overflow-hidden bg-card">
-        <svg ref={svgRef} width="100%" height="400" className="w-full"></svg>
+      <div className="w-full border rounded-lg bg-card min-h-[600px] flex items-end justify-center p-4">
+        <svg ref={svgRef} height="570" className="w-[calc(100%-16px)]"></svg>
       </div>
 
       <div className="flex gap-4 mt-2 flex-wrap">
