@@ -1,4 +1,7 @@
-# sort.dominiktoth.com
+<div align="center">
+  <img src="https://i.postimg.cc/G2jrqBZc/sort-visualizer.png" width="200" height="200" style="border-radius: 10000px;" />
+  <h1>sort.dominiktoth.com</h1>
+</div>
 
 This is a fun little school project to learn about sorting algorithms.
 I've built a website that helps visualize how some sorting algorithms work.

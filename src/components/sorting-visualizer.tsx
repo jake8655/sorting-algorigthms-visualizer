@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 import { SlidingNumber } from "./animate-ui/sliding-number";
 
 // Define the types for our data and animation states
@@ -22,7 +23,11 @@ type BarData = {
   originalIndex: number; // To track original position
 };
 
-export default function SortingVisualizer() {
+export default function SortingVisualizer({
+  className,
+}: {
+  className?: string;
+}) {
   const [arrayLength, setArrayLength] = useState(20);
 
   const [data, setData] = useState<BarData[]>([]);
@@ -531,11 +536,15 @@ export default function SortingVisualizer() {
   };
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className={cn("flex w-full flex-col gap-6", className)}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex gap-2">
           {!isSorting ? (
-            <RippleButton onClick={startSorting} variant="default">
+            <RippleButton
+              onClick={startSorting}
+              variant="default"
+              className="pointer-events-auto"
+            >
               <Play className="mr-2 h-4 w-4" />
               Start Sorting
             </RippleButton>
@@ -543,6 +552,7 @@ export default function SortingVisualizer() {
             <RippleButton
               onClick={togglePause}
               variant={isPaused ? "default" : "secondary"}
+              className="pointer-events-auto"
             >
               {isPaused ? (
                 <Play className="mr-2 h-4 w-4" />
@@ -553,19 +563,27 @@ export default function SortingVisualizer() {
             </RippleButton>
           )}
 
-          <RippleButton onClick={resetToOriginal} variant="outline">
+          <RippleButton
+            onClick={resetToOriginal}
+            variant="outline"
+            className="pointer-events-auto"
+          >
             <RotateCcw className="mr-2 h-4 w-4" />
             Reset
           </RippleButton>
 
-          <RippleButton onClick={generateNew} variant="outline">
+          <RippleButton
+            onClick={generateNew}
+            variant="outline"
+            className="pointer-events-auto"
+          >
             <RefreshCw className="mr-2 h-4 w-4" />
             New Data
           </RippleButton>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="pointer-events-auto flex items-center gap-2">
             <span className="text-sm">Speed:</span>
             <Slider
               value={[speed]}
@@ -589,7 +607,7 @@ export default function SortingVisualizer() {
             }
             disabled={isSorting}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="pointer-events-auto w-[180px]">
               <SelectValue placeholder="Select Algorithm" />
             </SelectTrigger>
             <SelectContent>
@@ -601,29 +619,29 @@ export default function SortingVisualizer() {
         </div>
       </div>
 
-      <div className="flex min-h-[550px] w-full items-end justify-center rounded-lg border bg-card/50 p-4">
+      <div className="pointer-events-auto flex min-h-[550px] w-full items-end justify-center rounded-lg border bg-card/50 p-4">
         <svg ref={svgRef} height="530" className="w-[calc(100%-16px)]"></svg>
       </div>
 
       <div className="mt-2 flex flex-wrap gap-4">
-        <div className="flex items-center gap-1">
+        <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#3B82F6]"></div>
           <span className="text-sm">Unsorted</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#FF5733]"></div>
           <span className="text-sm">Comparing</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#FFD700]"></div>
           <span className="text-sm">Current Element</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#33FF57]"></div>
           <span className="text-sm">Sorted</span>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="pointer-events-auto ml-auto flex items-center gap-2">
           <span className="text-sm">Length:</span>
           <Slider
             value={[arrayLength]}
