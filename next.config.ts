@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
@@ -11,8 +12,6 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
     ppr: true,
-    dynamicIO: true,
-    useCache: true,
   },
   typescript: {
     ignoreBuildErrors: true,
@@ -22,4 +21,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl(nextConfig);
