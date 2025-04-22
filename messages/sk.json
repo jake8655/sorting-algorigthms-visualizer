@@ -71,5 +71,80 @@
     "current": "Aktuálny prvok",
     "sorted": "Vytriedené",
     "length": "Dĺžka"
+  },
+  "algorithm-explanation": {
+    "stats": {
+      "title": "Štatistiky",
+      "iterations": "Iterácie",
+      "swaps": "Výmeny"
+    },
+    "complexity": {
+      "title": "Analýza zložitosti",
+      "case": "Prípad",
+      "best": "Najlepší",
+      "average": "Priemerný",
+      "worst": "Najhorší",
+      "time": "Čas",
+      "space": "Priestor"
+    },
+    "explanation": {
+      "title": "Ako to funguje",
+      "steps": "Kroky",
+      "cases": "Prípady",
+      "code": "Kód"
+    },
+    "bubble": {
+      "title": "Bubble Sort",
+      "description": "Jednoduchý porovnávací algoritmus, ktorý opakovane prechádza zoznamom, porovnáva susedné prvky a vymieňa ich, ak sú v nesprávnom poradí.",
+      "steps": [
+        "Začnite na začiatku poľa",
+        "Porovnajte susedné prvky. Ak je prvý väčší ako druhý, vymeňte ich",
+        "Prejdite na ďalší pár prvkov a opakujte porovnanie a výmenu, ak je to potrebné",
+        "Po jednom úplnom prechode bude najväčší prvok na konci. Opakujte proces pre zostávajúce prvky"
+      ],
+      "best-case": "Keď je pole už zoradené, bubble sort urobí iba jeden prechod poľom bez výmen.",
+      "average-case": "Pre náhodné polia bubble sort stále vyžaduje kvadratický čas.",
+      "worst-case": "Keď je pole zoradené v opačnom poradí, bubble sort musí urobiť maximálny počet porovnaní a výmen."
+    },
+    "selection": {
+      "title": "Selection Sort",
+      "description": "Jednoduchý porovnávací algoritmus triedenia na mieste, ktorý rozdeľuje vstupný zoznam na dve časti: zoradenú časť a nezoradenú časť.",
+      "steps": [
+        "Nájdite minimálny prvok v nezotriedenej časti poľa",
+        "Vymeňte ho s prvkom na začiatku nezotriedenej časti",
+        "Posuňte hranicu medzi zotriedenou a nezotriedenou časťou o jeden prvok doprava",
+        "Opakujte, kým nie je celé pole zotriedené"
+      ],
+      "best-case": "Selection sort vždy vykonáva rovnaký počet porovnaní bez ohľadu na poradie vstupného poľa.",
+      "average-case": "Pre náhodné polia selection sort vyžaduje kvadratický čas.",
+      "worst-case": "Selection sort vždy vykonáva rovnaký počet porovnaní a výmen bez ohľadu na poradie vstupného poľa."
+    },
+    "insertion": {
+      "title": "Insertion Sort",
+      "description": "Jednoduchý triediaci algoritmus, ktorý buduje konečné zoradené pole po jednom prvku, podobne ako by ste mohli triediť hracie karty v ruke.",
+      "steps": [
+        "Začnite s druhým prvkom (predpokladajte, že prvý prvok je už zotriedený)",
+        "Porovnajte aktuálny prvok s predchádzajúcimi prvkami",
+        "Ak je predchádzajúci prvok väčší ako aktuálny prvok, posuňte predchádzajúci prvok o jednu pozíciu dopredu",
+        "Opakujte, kým sa nenájde správna pozícia pre aktuálny prvok, potom ho vložte"
+      ],
+      "best-case": "Keď je pole už zoradené, insertion sort robí iba jedno porovnanie na prvok.",
+      "average-case": "Pre náhodné polia insertion sort vyžaduje kvadratický čas.",
+      "worst-case": "Keď je pole zoradené v opačnom poradí, insertion sort musí posunúť každý prvok na začiatok poľa."
+    },
+    "quicksort": {
+      "title": "Quick Sort",
+      "description": "Efektívny algoritmus triedenia typu rozdeľuj a panuj, ktorý funguje výberom 'pivotného' prvku a rozdelením poľa okolo pivotu.",
+      "steps": [
+        "Vyberte pivotný prvok z poľa",
+        "Rozdeľte pole: prvky menšie ako pivot idú doľava, väčšie doprava",
+        "Pivot je teraz na svojej konečnej zotriedenej pozícii",
+        "Rekurzívne aplikujte vyššie uvedené kroky na podpolia naľavo a napravo od pivotu",
+        "Základný prípad je, keď podpole má 0 alebo 1 prvok (už zotriedené)"
+      ],
+      "best-case": "Keď pivot vždy rozdelí pole na takmer rovnaké polovice, quick sort dosahuje najlepší výkon.",
+      "average-case": "Pre náhodné polia je quick sort veľmi efektívny s časovou zložitosťou O(n log n).",
+      "worst-case": "Keď je pivot vždy najmenší alebo najväčší prvok (napr. v už zoradených poliach), výkon quick sortu sa zhoršuje na O(n²)."
+    }
   }
 }
