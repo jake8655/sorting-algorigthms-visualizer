@@ -2,7 +2,8 @@
 
 import * as d3 from "d3";
 import { Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RippleButton } from "@/components/animate-ui/ripple-button";
 import {
   Select,
@@ -28,6 +29,8 @@ export default function SortingVisualizer({
 }: {
   className?: string;
 }) {
+  const t = useTranslations("visualizer");
+
   const [arrayLength, setArrayLength] = useState(20);
 
   const [data, setData] = useState<BarData[]>([]);
@@ -50,7 +53,7 @@ export default function SortingVisualizer({
   const animationFrameId = useRef<number | null>(null);
 
   // Generate random data
-  const generateRandomData = (count: number) => {
+  const generateRandomData = useCallback((count: number) => {
     const newData: BarData[] = [];
     for (let i = 0; i < count; i++) {
       newData.push({
@@ -62,7 +65,7 @@ export default function SortingVisualizer({
     }
     setData([...newData]);
     setOriginalData(JSON.parse(JSON.stringify(newData)));
-  };
+  }, []);
 
   // Initialize data on component mount
   useEffect(() => {
@@ -73,8 +76,7 @@ export default function SortingVisualizer({
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Not needed with React Compiler (https://github.com/biomejs/biome/issues/5293)
-  }, [generateRandomData, arrayLength]);
+  }, [arrayLength, generateRandomData]);
 
   useEffect(() => {
     d3.select(svgRef.current).selectAll("*").remove();
@@ -744,7 +746,7 @@ export default function SortingVisualizer({
               className="pointer-events-auto"
             >
               <Play className="mr-2 h-4 w-4" />
-              Start Sorting
+              {t("start")}
             </RippleButton>
           ) : (
             <RippleButton
@@ -767,7 +769,7 @@ export default function SortingVisualizer({
             className="pointer-events-auto"
           >
             <RotateCcw className="mr-2 h-4 w-4" />
-            Reset
+            {t("reset")}
           </RippleButton>
 
           <RippleButton
@@ -776,13 +778,13 @@ export default function SortingVisualizer({
             className="pointer-events-auto"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
-            New Data
+            {t("new-data")}
           </RippleButton>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="pointer-events-auto flex items-center gap-2">
-            <span className="text-sm">Speed:</span>
+            <span className="text-sm">{t("speed")}:</span>
             <Slider
               value={[speed]}
               onValueChange={value => {
@@ -806,7 +808,7 @@ export default function SortingVisualizer({
             disabled={isSorting}
           >
             <SelectTrigger className="pointer-events-auto w-[180px]">
-              <SelectValue placeholder="Select Algorithm" />
+              <SelectValue placeholder={t("select-algorithm")} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="bubble">Bubble Sort</SelectItem>
@@ -825,25 +827,25 @@ export default function SortingVisualizer({
       <div className="mt-2 flex flex-wrap gap-4">
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#3B82F6]"></div>
-          <span className="text-sm">Unsorted</span>
+          <span className="text-sm">{t("unsorted")}</span>
         </div>
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#FF5733]"></div>
-          <span className="text-sm">Comparing</span>
+          <span className="text-sm">{t("comparing")}</span>
         </div>
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#FFD700]"></div>
           <span className="text-sm">
-            {algorithm === "quicksort" ? "Pivot" : "Current Element"}
+            {algorithm === "quicksort" ? t("pivot") : t("current")}
           </span>
         </div>
         <div className="pointer-events-auto flex items-center gap-1">
           <div className="h-4 w-4 rounded-sm bg-[#33FF57]"></div>
-          <span className="text-sm">Sorted</span>
+          <span className="text-sm">{t("sorted")}</span>
         </div>
 
         <div className="pointer-events-auto ml-auto flex items-center gap-2">
-          <span className="text-sm">Length:</span>
+          <span className="text-sm">{t("length")}:</span>
           <Slider
             value={[arrayLength]}
             onValueChange={value => setArrayLength(value[0]!)}

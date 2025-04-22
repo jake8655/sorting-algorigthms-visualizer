@@ -1,7 +1,38 @@
 {
   "home": {
-    "title": "Sorting Algorithm Visualization",
-    "about": "I am a developer who loves to learn new things. I have been programming for over 10 years and I love to explore new technologies and languages. I am currently learning TypeScript and React."
+    "hero": {
+      "title": "Sorting Algorithms Visualized",
+      "about": "Explore and understand how different sorting algorithms work through interactive visualizations",
+      "call-to-action": "Start Exploring"
+    },
+    "info": {
+      "title": "What are Sorting Algorithms?",
+      "description": "<paragraph>Sorting algorithms are methods for reorganizing a sequence of items in a specific order, typically in ascending or descending sequence. These algorithms are fundamental to computer science and form the backbone of many complex systems.</paragraph><paragraph>From organizing databases to optimizing search functions, sorting algorithms play a crucial role in software development. Understanding how they work and their efficiency characteristics helps developers choose the right algorithm for specific tasks.</paragraph>",
+      "title2": "Why Visualize Them?",
+      "description2": "<point>Visual learning enhances understanding of complex concepts</point><point>Compare algorithm efficiency in real-time</point><point>Identify patterns and behaviors in different sorting methods</point><point>Perfect for students, educators, and curious minds</point>"
+    },
+    "algorithms": {
+      "title": "Explore Popular Algorithms",
+      "description": "Select an algorithm to visualize its sorting process in the interactive playground",
+      "call-to-action": "Visualize",
+      "call-to-action2": "View All Algorithms",
+      "bubble-sort": {
+        "title": "Bubble Sort",
+        "description": "Simple comparison-based algorithm"
+      },
+      "selection-sort": {
+        "title": "Selection Sort",
+        "description": "In-place comparison sorting algorithm"
+      },
+      "insertion-sort": {
+        "title": "Insertion Sort",
+        "description": "Builds sorted array one item at a time"
+      },
+      "quick-sort": {
+        "title": "Quick Sort",
+        "description": "Efficient divide-and-conquer algorithm"
+      }
+    }
   },
   "metadata": {
     "title": "Sorting Algorithm Visualization",
@@ -14,11 +45,30 @@
   },
   "locale-switcher": {
     "label": "Change Language",
-    "locale": "{locale, select, en {🇺 English} sk {🇸 Slovenský} other {Unknown}}"
+    "locale": "{locale, select, en {English} sk {Slovak} other {Unknown}}"
   },
   "navigation": {
     "home": "Home",
     "playground": "Playground"
   },
-  "visualizer": {}
+  "footer": {
+    "title": "Sorting Algorithm Visualizer",
+    "description": "Learn through interactive visualization",
+    "copyright": "All rights reserved."
+  },
+  "visualizer": {
+    "start": "Start Sorting",
+    "resume": "Resume",
+    "pause": "Pause",
+    "reset": "Reset",
+    "new-data": "New Data",
+    "speed": "Speed",
+    "select-algorithm": "Select Algorithm",
+    "unsorted": "Unsorted",
+    "comparing": "Comparing",
+    "pivot": "Pivot",
+    "current": "Current Element",
+    "sorted": "Sorted",
+    "length": "Length:"
+  }
 }

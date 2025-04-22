@@ -4,6 +4,7 @@ import { ArrowRight, Home } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { GradientText } from "@/components/animate-ui/gradient-text";
 import { HoleBackground } from "@/components/animate-ui/hole-background";
 import { Link } from "@/i18n/navigation";
 
@@ -28,8 +29,8 @@ export default function NotFoundPage() {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <h1 className="mb-2 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text font-black text-7xl text-transparent">
-            404
+          <h1 className="mb-2 bg-clip-text font-black text-7xl">
+            <GradientText text="404" neon />
           </h1>
           <motion.h2
             className="mb-4 font-bold text-4xl text-white md:text-5xl"
