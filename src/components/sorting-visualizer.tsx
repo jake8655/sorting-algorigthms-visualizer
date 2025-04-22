@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import { Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RippleButton } from "@/components/animate-ui/ripple-button";
 import {
   Select,
@@ -53,7 +53,7 @@ export default function SortingVisualizer({
   const animationFrameId = useRef<number | null>(null);
 
   // Generate random data
-  const generateRandomData = (count: number) => {
+  const generateRandomData = useCallback((count: number) => {
     const newData: BarData[] = [];
     for (let i = 0; i < count; i++) {
       newData.push({
@@ -65,7 +65,7 @@ export default function SortingVisualizer({
     }
     setData([...newData]);
     setOriginalData(JSON.parse(JSON.stringify(newData)));
-  };
+  }, []);
 
   // Initialize data on component mount
   useEffect(() => {
@@ -76,8 +76,7 @@ export default function SortingVisualizer({
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-    // biome-ignore lint/correctness/useExhaustiveDependencies: Not needed with React Compiler (https://github.com/biomejs/biome/issues/5293)
-  }, [generateRandomData, arrayLength]);
+  }, [arrayLength, generateRandomData]);
 
   useEffect(() => {
     d3.select(svgRef.current).selectAll("*").remove();
