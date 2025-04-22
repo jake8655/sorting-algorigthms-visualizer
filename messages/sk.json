@@ -1,7 +1,38 @@
 {
   "home": {
-    "title": "Vizualizácia algoritmov pre triedenie",
-    "about": "Som vývojár, ktorý rád sa zaujíma nových vecí. Som programoval od viac ako 10 rokov a rád sa zaujíma nových technológií a jazykov. V súčasnosti sa učím TypeScript a React."
+    "hero": {
+      "title": "Algoritmy Triedení Vizualizované",
+      "about": "Preskúmaj a pochop, ako fungujú rôzne algoritmy triedení cez interaktívne vizualizácie",
+      "call-to-action": "Chcem Vyskúšať"
+    },
+    "info": {
+      "title": "Čo sú Triediace algoritmy?",
+      "description": "<paragraph>Triediace algoritmy sú metódy pre preorganizovanie sekvencie položiek v konkrétnom poradí, obvykle v poradí vzostupne alebo zostupu. Tieto algoritmy sú základné v informatike a tvoria základ pre mnoho zložitejších systémov.</paragraph><paragraph>Od organizácie databáz cez optimalizáciu vyhľadávacích funkcií, triediace algoritmy sú zásadné vo vývoji softvéru. Poznanie ich funkcií a účinností nám pomôže vybrať správny algoritmus pre konkrétnu úlohu.</paragraph>",
+      "title2": "Prečo ich vizualizovať?",
+      "description2": "<point>Vizualizácia pomáha pri pochopení zložitých konceptov</point><point>Porovnávaj efektívnosť algoritmov</point><point>Zisti vzory a správanie v rôznych triediacich algoritmoch</point><point>Ideálne pre študentov, učiteľov a zvedavé hlavy</point>"
+    },
+    "algorithms": {
+      "title": "Pozri si Populárne Algoritmy",
+      "description": "Vyber si algoritmus, ktorý chceš vizualizovať v interaktívnom prehrávaní",
+      "call-to-action": "Vizualizovať",
+      "call-to-action2": "Pozrieť všetky algoritmy",
+      "bubble-sort": {
+        "title": "Bubble Sort",
+        "description": "Jednoduchý porovnávací algoritmus"
+      },
+      "selection-sort": {
+        "title": "Selection Sort",
+        "description": "Porovnávací algoritmus na mieste v pamäti"
+      },
+      "insertion-sort": {
+        "title": "Insertion Sort",
+        "description": "Vytvára zoradený zoznam jednou položkou naraz"
+      },
+      "quick-sort": {
+        "title": "Quick Sort",
+        "description": "Efektívny algoritmus rozdelenia a zlúčenia"
+      }
+    }
   },
   "metadata": {
     "title": "Vizualizácia algoritmov pre triedenie",
@@ -14,10 +45,31 @@
   },
   "locale-switcher": {
     "label": "Zmeniť jazyk",
-    "locale": "{locale, select, en {🇺 Anglický} sk {🇸 Slovenský} other {Neznámy}}"
+    "locale": "{locale, select, en {Anglický} sk {Slovenský} other {Neznámy}}"
   },
   "navigation": {
     "home": "Domov",
     "playground": "Vizualizácia"
+  },
+  "footer": {
+    "title": "Vizualizácia algoritmov pre triedenie",
+    "description": "Nauč sa cez interaktívne vizualizácie",
+
+    "copyright": "Všetky práva vyhradené."
+  },
+  "visualizer": {
+    "start": "Začať triedenie",
+    "resume": "Pokračovať",
+    "pause": "Zastaviť",
+    "reset": "Resetovať",
+    "new-data": "Nové dáta",
+    "speed": "Rýchlosť",
+    "select-algorithm": "Vyber algoritmus",
+    "unsorted": "Nevytriedené",
+    "comparing": "Porovnávanie",
+    "pivot": "Pivot",
+    "current": "Aktuálny prvok",
+    "sorted": "Vytriedené",
+    "length": "Dĺžka:"
   }
 }
