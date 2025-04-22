@@ -1,13 +1,42 @@
+"use client";
+
+import AlgorithmExplanation from "@/components/algorithm-explanation";
 import { HexagonBackground } from "@/components/animate-ui/hexagon-background";
 import SortingVisualizer from "@/components/sorting-visualizer";
+import { useState } from "react";
 
 export default function Playground() {
-  return (
-    <div className="relative flex min-h-screen items-center justify-center">
-      <HexagonBackground className="absolute inset-0" />
+  const [algorithm, setAlgorithm] = useState<
+    "bubble" | "selection" | "insertion" | "quicksort"
+  >("bubble");
+  const [iterations, setIterations] = useState(0);
+  const [swaps, setSwaps] = useState(0);
 
-      <div className="pointer-events-none relative z-10 w-4xl">
-        <SortingVisualizer />
+  return (
+    <div>
+      <div className="relative flex min-h-[90vh] items-center justify-center">
+        <HexagonBackground className="absolute inset-0" />
+
+        <div className="pointer-events-none relative z-10 w-4xl mt-40">
+          <SortingVisualizer
+            algorithm={algorithm}
+            setAlgorithm={setAlgorithm}
+            setIterations={setIterations}
+            setSwaps={setSwaps}
+          />
+        </div>
+      </div>
+
+      <div className="relative flex justify-center">
+        <HexagonBackground className="absolute inset-0" />
+        <div className="pointer-events-none relative z-10 w-4xl my-16">
+          <AlgorithmExplanation
+            algorithm={algorithm}
+            iterations={iterations}
+            swaps={swaps}
+            className="pointer-events-auto"
+          />
+        </div>
       </div>
     </div>
   );

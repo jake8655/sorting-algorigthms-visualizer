@@ -70,5 +70,80 @@
     "current": "Current Element",
     "sorted": "Sorted",
     "length": "Length:"
+  },
+  "algorithm-explanation": {
+    "stats": {
+      "title": "Statistics",
+      "iterations": "Iterations",
+      "swaps": "Swaps"
+    },
+    "complexity": {
+      "title": "Complexity Analysis",
+      "case": "Case",
+      "best": "Best",
+      "average": "Average",
+      "worst": "Worst",
+      "time": "Time",
+      "space": "Space"
+    },
+    "explanation": {
+      "title": "How It Works",
+      "steps": "Steps",
+      "cases": "Cases",
+      "code": "Code"
+    },
+    "bubble": {
+      "title": "Bubble Sort",
+      "description": "A simple comparison-based algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
+      "steps": [
+        "Start at the beginning of the array",
+        "Compare adjacent elements. If the first is greater than the second, swap them",
+        "Move to the next pair of elements and repeat the comparison and swap if necessary",
+        "After one complete pass, the largest element will be at the end. Repeat the process for the remaining elements"
+      ],
+      "best-case": "When the array is already sorted, bubble sort makes only one pass through the array with no swaps.",
+      "average-case": "For random arrays, bubble sort still requires quadratic time.",
+      "worst-case": "When the array is sorted in reverse order, bubble sort must make the maximum number of comparisons and swaps."
+    },
+    "selection": {
+      "title": "Selection Sort",
+      "description": "A simple in-place comparison sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist.",
+      "steps": [
+        "Find the minimum element in the unsorted part of the array",
+        "Swap it with the element at the beginning of the unsorted part",
+        "Move the boundary between the sorted and unsorted parts one element to the right",
+        "Repeat until the entire array is sorted"
+      ],
+      "best-case": "Selection sort always performs the same number of comparisons regardless of the input array's order.",
+      "average-case": "For random arrays, selection sort requires quadratic time.",
+      "worst-case": "Selection sort always performs the same number of comparisons and swaps regardless of the input array's order."
+    },
+    "insertion": {
+      "title": "Insertion Sort",
+      "description": "A simple sorting algorithm that builds the final sorted array one item at a time, similar to how you might sort playing cards in your hand.",
+      "steps": [
+        "Start with the second element (assume the first element is already sorted)",
+        "Compare the current element with the previous elements",
+        "If the previous element is greater than the current element, move the previous element one position ahead",
+        "Repeat until the correct position for the current element is found, then insert it"
+      ],
+      "best-case": "When the array is already sorted, insertion sort makes only one comparison per element.",
+      "average-case": "For random arrays, insertion sort requires quadratic time.",
+      "worst-case": "When the array is sorted in reverse order, insertion sort must shift each element to the beginning of the array."
+    },
+    "quicksort": {
+      "title": "Quick Sort",
+      "description": "An efficient, divide-and-conquer sorting algorithm that works by selecting a 'pivot' element and partitioning the array around the pivot.",
+      "steps": [
+        "Choose a pivot element from the array",
+        "Partition the array: items less than the pivot go to the left, items greater go to the right",
+        "The pivot is now in its final sorted position",
+        "Recursively apply the above steps to the sub-arrays on the left and right of the pivot",
+        "The base case is when a sub-array has 0 or 1 elements (already sorted)"
+      ],
+      "best-case": "When the pivot always divides the array into nearly equal halves, quick sort achieves its best performance.",
+      "average-case": "For random arrays, quick sort is very efficient with O(n log n) time complexity.",
+      "worst-case": "When the pivot is always the smallest or largest element (e.g., in already sorted arrays), quick sort degrades to O(n²) performance."
+    }
   }
 }
