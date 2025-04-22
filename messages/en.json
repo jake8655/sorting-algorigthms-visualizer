@@ -1,0 +1,24 @@
+{
+  "home": {
+    "title": "Sorting Algorithm Visualization",
+    "about": "I am a developer who loves to learn new things. I have been programming for over 10 years and I love to explore new technologies and languages. I am currently learning TypeScript and React."
+  },
+  "metadata": {
+    "title": "Sorting Algorithm Visualization",
+    "description": "A simple visualization of some basic sorting algorithms"
+  },
+  "not-found": {
+    "title": "Oops! This page has been <newline>sucked into the void</newline>",
+    "description": "The page you're looking for seems to have been pulled into the event horizon. Even light can't escape, but you still can!",
+    "link": "Escape to Safety"
+  },
+  "locale-switcher": {
+    "label": "Change Language",
+    "locale": "{locale, select, en {🇺 English} sk {🇸 Slovenský} other {Unknown}}"
+  },
+  "navigation": {
+    "home": "Home",
+    "playground": "Playground"
+  },
+  "visualizer": {}
+}

@@ -1,0 +1,23 @@
+{
+  "home": {
+    "title": "Vizualizácia algoritmov pre triedenie",
+    "about": "Som vývojár, ktorý rád sa zaujíma nových vecí. Som programoval od viac ako 10 rokov a rád sa zaujíma nových technológií a jazykov. V súčasnosti sa učím TypeScript a React."
+  },
+  "metadata": {
+    "title": "Vizualizácia algoritmov pre triedenie",
+    "description": "Jednoduchá vizualizácia niektorých základných algoritmov triedenia"
+  },
+  "not-found": {
+    "title": "Oops! Stránka bola <newline>zhltnutá do prázdnoty</newline>",
+    "description": "Stránka, ktorú hľadáte, bola vtiahnutá do horizontu. Ani svetlo nevie uniknúť, ale vy stále môžete!",
+    "link": "Späť do bezpečia"
+  },
+  "locale-switcher": {
+    "label": "Zmeniť jazyk",
+    "locale": "{locale, select, en {🇺 Anglický} sk {🇸 Slovenský} other {Neznámy}}"
+  },
+  "navigation": {
+    "home": "Domov",
+    "playground": "Vizualizácia"
+  }
+}
