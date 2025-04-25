@@ -1,9 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import AlgorithmExplanation from "@/components/algorithm-explanation";
 import { HexagonBackground } from "@/components/animate-ui/hexagon-background";
 import SortingVisualizer from "@/components/sorting-visualizer";
-import { useState } from "react";
 
 export default function Playground() {
   const [algorithm, setAlgorithm] = useState<
@@ -17,7 +17,7 @@ export default function Playground() {
       <div className="relative flex min-h-[90vh] items-center justify-center">
         <HexagonBackground className="absolute inset-0" />
 
-        <div className="pointer-events-none relative z-10 w-4xl mt-40">
+        <div className="pointer-events-none relative z-10 mt-40 w-4xl">
           <SortingVisualizer
             algorithm={algorithm}
             setAlgorithm={setAlgorithm}
@@ -29,7 +29,7 @@ export default function Playground() {
 
       <div className="relative flex justify-center">
         <HexagonBackground className="absolute inset-0" />
-        <div className="pointer-events-none relative z-10 w-4xl my-16">
+        <div className="pointer-events-none relative z-10 my-16 w-4xl">
           <AlgorithmExplanation
             algorithm={algorithm}
             iterations={iterations}
