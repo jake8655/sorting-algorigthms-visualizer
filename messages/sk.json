@@ -45,7 +45,7 @@
   },
   "locale-switcher": {
     "label": "Zmeniť jazyk",
-    "locale": "{locale, select, en {Anglický} sk {Slovenský} other {Neznámy}}"
+    "locale": "{locale, select, en {Angličtina} sk {Slovenčina} other {Neznámy}}"
   },
   "navigation": {
     "home": "Domov",
