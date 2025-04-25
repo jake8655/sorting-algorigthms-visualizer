@@ -1,5 +1,6 @@
 "use client";
 
+import { Globe } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { type Locale } from "next-intl";
@@ -41,7 +42,7 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
     <Select value={locale} onValueChange={onSelectChange} disabled={isPending}>
       <SelectTrigger
         className={cn(
-          "w-[140px]",
+          "w-[150px]",
           isPending && "transition-opacity [&:disabled]:opacity-30",
           className,
         )}
@@ -51,6 +52,7 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
       <SelectContent>
         {routing.locales.map(cur => (
           <SelectItem key={cur} value={cur}>
+            <Globe className="size-4" />
             {t("locale", { locale: cur })}
           </SelectItem>
         ))}
