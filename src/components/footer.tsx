@@ -35,10 +35,17 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between border-[oklch(0.984_0.003_247.858)/10] border-t pt-8 md:flex-row">
-          <div className="flex flex-col">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-[oklch(0.984_0.003_247.858)/10] border-t pt-8 md:flex-row md:gap-0">
+          <div className="flex flex-col items-center md:items-start">
             <p className="text-foreground/70 text-sm">
-              © {new Date().getFullYear()} Dominik Tóth
+              © {new Date().getFullYear()}{" "}
+              <a
+                href="https://dominiktoth.com"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Dominik Tóth
+              </a>
             </p>
             <p className="text-foreground/70 text-sm">{t("copyright")}</p>
           </div>
