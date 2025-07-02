@@ -39,6 +39,14 @@ function BubbleBackground({
   },
   ...props
 }: BubbleBackgroundProps) {
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    console.log(window.innerWidth);
+    if (window.innerWidth < 768) {
+      setIsMobile(true);
+    }
+  }, []);
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);
 
@@ -48,7 +56,7 @@ function BubbleBackground({
   const springY = useSpring(mouseY, transition);
 
   React.useEffect(() => {
-    if (!interactive) return;
+    if (!interactive || isMobile) return;
 
     const currentContainer = containerRef.current;
     if (!currentContainer) return;
@@ -64,7 +72,7 @@ function BubbleBackground({
     currentContainer?.addEventListener("mousemove", handleMouseMove);
     return () =>
       currentContainer?.removeEventListener("mousemove", handleMouseMove);
-  }, [interactive, mouseX, mouseY]);
+  }, [interactive, mouseX, mouseY, isMobile]);
 
   return (
     <div
@@ -92,6 +100,7 @@ function BubbleBackground({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="absolute top-0 left-0 h-0 w-0"
+        style={{ transform: "translate3d(0, 0, 0)" }}
       >
         <defs>
           <filter id="goo">
@@ -113,7 +122,10 @@ function BubbleBackground({
 
       <div
         className="absolute inset-0"
-        style={{ filter: "url(#goo) blur(40px)" }}
+        style={{
+          filter: isMobile ? "none" : "url(#goo) blur(40px)",
+          transform: "translate3d(0, 0, 0)",
+        }}
       >
         <motion.div
           className="absolute top-[10%] left-[10%] size-[80%] rounded-full bg-[radial-gradient(circle_at_center,rgba(var(--first-color),0.8)_0%,rgba(var(--first-color),0)_50%)] mix-blend-hard-light"
