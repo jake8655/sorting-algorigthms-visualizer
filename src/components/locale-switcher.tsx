@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { type Locale } from "next-intl";
 import { useTransition } from "react";
+import { useIsMobile } from "@/hooks";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
@@ -25,16 +26,11 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
   const pathname = usePathname();
   const params = useParams();
 
-  function onSelectChange(val: string) {
-    const nextLocale = val as Locale;
+  const isMobile = useIsMobile();
+
+  function onSelectChange(val: Locale) {
     startTransition(() => {
-      router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
-        // are used in combination with a given `pathname`. Since the two will
-        // always match for the current route, we can skip runtime checks.
-        { pathname, params },
-        { locale: nextLocale },
-      );
+      router.replace({ pathname, query: params }, { locale: val });
     });
   }
 
@@ -42,7 +38,7 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
     <Select value={locale} onValueChange={onSelectChange} disabled={isPending}>
       <SelectTrigger
         className={cn(
-          "w-[150px]",
+          isMobile ? "w-26" : "w-[150px]",
           isPending && "transition-opacity [&:disabled]:opacity-30",
           className,
         )}
@@ -53,7 +49,7 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
         {routing.locales.map(cur => (
           <SelectItem key={cur} value={cur}>
             <Globe className="size-4" />
-            {t("locale", { locale: cur })}
+            {t(isMobile ? "locale-short" : "locale", { locale: cur })}
           </SelectItem>
         ))}
       </SelectContent>

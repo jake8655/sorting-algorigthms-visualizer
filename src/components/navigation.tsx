@@ -64,9 +64,7 @@ export default function Navbar() {
           </nav>
 
           {/* Language Selector */}
-          <div className="hidden md:block">
-            <LocaleSwitcher className="pointer-events-auto" />
-          </div>
+          <LocaleSwitcher className="pointer-events-auto" />
         </div>
       </div>
     </motion.header>

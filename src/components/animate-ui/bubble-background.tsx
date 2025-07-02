@@ -7,7 +7,7 @@ import {
   useSpring,
 } from "motion/react";
 import * as React from "react";
-
+import { useIsMobile } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 type BubbleBackgroundProps = React.ComponentProps<"div"> & {
@@ -39,13 +39,7 @@ function BubbleBackground({
   },
   ...props
 }: BubbleBackgroundProps) {
-  const [isMobile, setIsMobile] = React.useState(false);
-  React.useEffect(() => {
-    console.log(window.innerWidth);
-    if (window.innerWidth < 768) {
-      setIsMobile(true);
-    }
-  }, []);
+  const isMobile = useIsMobile();
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);

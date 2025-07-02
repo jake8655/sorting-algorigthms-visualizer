@@ -45,7 +45,8 @@
   },
   "locale-switcher": {
     "label": "Change Language",
-    "locale": "{locale, select, en {English} sk {Slovak} other {Unknown}}"
+    "locale": "{locale, select, en {English} sk {Slovak} other {Unknown}}",
+    "locale-short": "{locale, select, en {EN} sk {SK} other {XX}}"
   },
   "navigation": {
     "home": "Home",
