@@ -63,7 +63,7 @@ export default function HomePage() {
             </h1>
 
             <motion.p
-              className="pointer-events-auto mx-auto max-w-2xl text-[oklch(0.984_0.003_247.858)] text-xl opacity-80 md:text-2xl"
+              className="pointer-events-auto mx-auto max-w-2xl text-balance text-[oklch(0.984_0.003_247.858)] text-xl opacity-80 md:text-2xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.8 }}
