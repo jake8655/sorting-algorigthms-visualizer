@@ -5,6 +5,7 @@
 
 This is a fun little school project to learn about sorting algorithms.
 I've built a website that helps visualize how some sorting algorithms work.
+![Sorting Algorithms Visualized](https://github.com/user-attachments/assets/6d85d982-98b1-43da-99f1-e0a2109c0a47)
 
 ## Tech stack
 
