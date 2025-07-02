@@ -3,20 +3,12 @@
 import { ArrowRight, Home } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { GradientText } from "@/components/animate-ui/gradient-text";
 import { HoleBackground } from "@/components/animate-ui/hole-background";
 import { Link } from "@/i18n/navigation";
 
 export default function NotFoundPage() {
   const t = useTranslations("not-found");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <div className="relative flex min-h-screen items-center justify-center">

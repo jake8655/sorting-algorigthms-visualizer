@@ -11,20 +11,12 @@ import {
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
 import { BubbleBackground } from "@/components/animate-ui/bubble-background";
 import { GradientText } from "@/components/animate-ui/gradient-text";
 import { RippleButton } from "@/components/animate-ui/ripple-button";
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const t = useTranslations("home");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-[oklch(0.129_0.042_264.695)]">
