@@ -8,17 +8,14 @@ import createNextIntlPlugin from "next-intl/plugin";
 import "@/env";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  experimental: {
-    reactCompiler: true,
-    ppr: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+	reactStrictMode: true,
+	experimental: {
+		reactCompiler: true,
+		ppr: true,
+	},
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 };
 
 const withNextIntl = createNextIntlPlugin();
