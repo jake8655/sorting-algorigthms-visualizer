@@ -1,43 +1,27 @@
-"use client";
-
-import { useState } from "react";
-import AlgorithmExplanation from "@/components/algorithm-explanation";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { SearchParams } from "nuqs/server";
 import { HexagonBackground } from "@/components/animate-ui/hexagon-background";
-import SortingVisualizer from "@/components/sorting-visualizer";
+import PlaygroundState from "@/components/playground-state";
+import { getQueryClient } from "@/lib/get-query-client";
+import { codeHighlightOptions, loadSearchParams } from "@/lib/utils";
 
-export default function Playground() {
-  const [algorithm, setAlgorithm] = useState<
-    "bubble" | "selection" | "insertion" | "quicksort"
-  >("bubble");
-  const [iterations, setIterations] = useState(0);
-  const [swaps, setSwaps] = useState(0);
+export default async function Playground({
+	searchParams,
+}: {
+	searchParams: Promise<SearchParams>;
+}) {
+	const { algorithm } = await loadSearchParams(searchParams);
+	const queryClient = getQueryClient();
 
-  return (
-    <div>
-      <div className="relative flex min-h-[90vh] items-center justify-center">
-        <HexagonBackground className="absolute inset-0" />
+	await queryClient.prefetchQuery(codeHighlightOptions(algorithm));
 
-        <div className="pointer-events-none relative z-10 mt-40 w-4xl">
-          <SortingVisualizer
-            algorithm={algorithm}
-            setAlgorithm={setAlgorithm}
-            setIterations={setIterations}
-            setSwaps={setSwaps}
-          />
-        </div>
-      </div>
+	return (
+		<div className="relative flex items-center justify-center">
+			<HexagonBackground className="absolute inset-0" />
 
-      <div className="relative flex justify-center">
-        <HexagonBackground className="absolute inset-0" />
-        <div className="pointer-events-none relative z-10 my-16 w-4xl">
-          <AlgorithmExplanation
-            algorithm={algorithm}
-            iterations={iterations}
-            swaps={swaps}
-            className="pointer-events-auto"
-          />
-        </div>
-      </div>
-    </div>
-  );
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<PlaygroundState />
+			</HydrationBoundary>
+		</div>
+	);
 }
