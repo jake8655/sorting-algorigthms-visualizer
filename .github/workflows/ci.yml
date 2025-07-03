@@ -36,11 +36,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/setup
 
-      - name: Format & Lint & Typecheck
+      - name: Check & Typecheck
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          bun fmt
-          bun lint
+          bun check
           bun typecheck
 
   build:

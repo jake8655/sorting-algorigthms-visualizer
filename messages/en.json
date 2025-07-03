@@ -1,150 +1,150 @@
 {
-  "home": {
-    "hero": {
-      "title": "Sorting Algorithms Visualized",
-      "about": "Explore and understand how different sorting algorithms work through interactive visualizations",
-      "call-to-action": "Start Exploring"
-    },
-    "info": {
-      "title": "What are Sorting Algorithms?",
-      "description": "<paragraph>Sorting algorithms are methods for reorganizing a sequence of items in a specific order, typically in ascending or descending sequence. These algorithms are fundamental to computer science and form the backbone of many complex systems.</paragraph><paragraph>From organizing databases to optimizing search functions, sorting algorithms play a crucial role in software development. Understanding how they work and their efficiency characteristics helps developers choose the right algorithm for specific tasks.</paragraph>",
-      "title2": "Why Visualize Them?",
-      "description2": "<point>Visual learning enhances understanding of complex concepts</point><point>Compare algorithm efficiency in real-time</point><point>Identify patterns and behaviors in different sorting methods</point><point>Perfect for students, educators, and curious minds</point>"
-    },
-    "algorithms": {
-      "title": "Explore Popular Algorithms",
-      "description": "Select an algorithm to visualize its sorting process in the interactive playground",
-      "call-to-action": "Visualize",
-      "call-to-action2": "View All Algorithms",
-      "bubble-sort": {
-        "title": "Bubble Sort",
-        "description": "Simple comparison-based algorithm"
-      },
-      "selection-sort": {
-        "title": "Selection Sort",
-        "description": "In-place comparison sorting algorithm"
-      },
-      "insertion-sort": {
-        "title": "Insertion Sort",
-        "description": "Builds sorted array one item at a time"
-      },
-      "quick-sort": {
-        "title": "Quick Sort",
-        "description": "Efficient divide-and-conquer algorithm"
-      }
-    }
-  },
-  "metadata": {
-    "title": "Sorting Algorithm Visualization",
-    "description": "A simple visualization of some basic sorting algorithms"
-  },
-  "not-found": {
-    "title": "Oops! This page has been <newline>sucked into the void</newline>",
-    "description": "The page you're looking for seems to have been pulled into the event horizon. Even light can't escape, but you still can!",
-    "link": "Escape to Safety"
-  },
-  "locale-switcher": {
-    "label": "Change Language",
-    "locale": "{locale, select, en {English} sk {Slovak} other {Unknown}}",
-    "locale-short": "{locale, select, en {EN} sk {SK} other {XX}}"
-  },
-  "navigation": {
-    "home": "Home",
-    "playground": "Playground"
-  },
-  "footer": {
-    "title": "Sorting Algorithm Visualizer",
-    "description": "Learn through interactive visualization",
-    "copyright": "All rights reserved."
-  },
-  "visualizer": {
-    "start": "Start Sorting",
-    "resume": "Resume",
-    "pause": "Pause",
-    "reset": "Reset",
-    "new-data": "New Data",
-    "speed": "Speed",
-    "select-algorithm": "Select Algorithm",
-    "unsorted": "Unsorted",
-    "comparing": "Comparing",
-    "pivot": "Pivot",
-    "current": "Current Element",
-    "sorted": "Sorted",
-    "length": "Length"
-  },
-  "algorithm-explanation": {
-    "stats": {
-      "title": "Statistics",
-      "iterations": "Iterations",
-      "swaps": "Swaps"
-    },
-    "complexity": {
-      "title": "Complexity Analysis",
-      "case": "Case",
-      "best": "Best",
-      "average": "Average",
-      "worst": "Worst",
-      "time": "Time",
-      "space": "Space"
-    },
-    "explanation": {
-      "title": "How It Works",
-      "steps": "Steps",
-      "cases": "Cases",
-      "code": "Code"
-    },
-    "bubble": {
-      "title": "Bubble Sort",
-      "description": "A simple comparison-based algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
-      "steps": [
-        "Start at the beginning of the array",
-        "Compare adjacent elements. If the first is greater than the second, swap them",
-        "Move to the next pair of elements and repeat the comparison and swap if necessary",
-        "After one complete pass, the largest element will be at the end. Repeat the process for the remaining elements"
-      ],
-      "best-case": "When the array is already sorted, bubble sort makes only one pass through the array with no swaps.",
-      "average-case": "For random arrays, bubble sort still requires quadratic time.",
-      "worst-case": "When the array is sorted in reverse order, bubble sort must make the maximum number of comparisons and swaps."
-    },
-    "selection": {
-      "title": "Selection Sort",
-      "description": "A simple in-place comparison sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist.",
-      "steps": [
-        "Find the minimum element in the unsorted part of the array",
-        "Swap it with the element at the beginning of the unsorted part",
-        "Move the boundary between the sorted and unsorted parts one element to the right",
-        "Repeat until the entire array is sorted"
-      ],
-      "best-case": "Selection sort always performs the same number of comparisons regardless of the input array's order.",
-      "average-case": "For random arrays, selection sort requires quadratic time.",
-      "worst-case": "Selection sort always performs the same number of comparisons and swaps regardless of the input array's order."
-    },
-    "insertion": {
-      "title": "Insertion Sort",
-      "description": "A simple sorting algorithm that builds the final sorted array one item at a time, similar to how you might sort playing cards in your hand.",
-      "steps": [
-        "Start with the second element (assume the first element is already sorted)",
-        "Compare the current element with the previous elements",
-        "If the previous element is greater than the current element, move the previous element one position ahead",
-        "Repeat until the correct position for the current element is found, then insert it"
-      ],
-      "best-case": "When the array is already sorted, insertion sort makes only one comparison per element.",
-      "average-case": "For random arrays, insertion sort requires quadratic time.",
-      "worst-case": "When the array is sorted in reverse order, insertion sort must shift each element to the beginning of the array."
-    },
-    "quicksort": {
-      "title": "Quick Sort",
-      "description": "An efficient, divide-and-conquer sorting algorithm that works by selecting a 'pivot' element and partitioning the array around the pivot.",
-      "steps": [
-        "Choose a pivot element from the array",
-        "Partition the array: items less than the pivot go to the left, items greater go to the right",
-        "The pivot is now in its final sorted position",
-        "Recursively apply the above steps to the sub-arrays on the left and right of the pivot",
-        "The base case is when a sub-array has 0 or 1 elements (already sorted)"
-      ],
-      "best-case": "When the pivot always divides the array into nearly equal halves, quick sort achieves its best performance.",
-      "average-case": "For random arrays, quick sort is very efficient with O(n log n) time complexity.",
-      "worst-case": "When the pivot is always the smallest or largest element (e.g., in already sorted arrays), quick sort degrades to O(n²) performance."
-    }
-  }
+	"home": {
+		"hero": {
+			"title": "Sorting Algorithms Visualized",
+			"about": "Explore and understand how different sorting algorithms work through interactive visualizations",
+			"call-to-action": "Start Exploring"
+		},
+		"info": {
+			"title": "What are Sorting Algorithms?",
+			"description": "<paragraph>Sorting algorithms are methods for reorganizing a sequence of items in a specific order, typically in ascending or descending sequence. These algorithms are fundamental to computer science and form the backbone of many complex systems.</paragraph><paragraph>From organizing databases to optimizing search functions, sorting algorithms play a crucial role in software development. Understanding how they work and their efficiency characteristics helps developers choose the right algorithm for specific tasks.</paragraph>",
+			"title2": "Why Visualize Them?",
+			"description2": "<point>Visual learning enhances understanding of complex concepts</point><point>Compare algorithm efficiency in real-time</point><point>Identify patterns and behaviors in different sorting methods</point><point>Perfect for students, educators, and curious minds</point>"
+		},
+		"algorithms": {
+			"title": "Explore Popular Algorithms",
+			"description": "Select an algorithm to visualize its sorting process in the interactive playground",
+			"call-to-action": "Visualize",
+			"call-to-action2": "View All Algorithms",
+			"bubble-sort": {
+				"title": "Bubble Sort",
+				"description": "Simple comparison-based algorithm"
+			},
+			"selection-sort": {
+				"title": "Selection Sort",
+				"description": "In-place comparison sorting algorithm"
+			},
+			"insertion-sort": {
+				"title": "Insertion Sort",
+				"description": "Builds sorted array one item at a time"
+			},
+			"quick-sort": {
+				"title": "Quick Sort",
+				"description": "Efficient divide-and-conquer algorithm"
+			}
+		}
+	},
+	"metadata": {
+		"title": "Sorting Algorithm Visualization",
+		"description": "A simple visualization of some basic sorting algorithms"
+	},
+	"not-found": {
+		"title": "Oops! This page has been <newline>sucked into the void</newline>",
+		"description": "The page you're looking for seems to have been pulled into the event horizon. Even light can't escape, but you still can!",
+		"link": "Escape to Safety"
+	},
+	"locale-switcher": {
+		"label": "Change Language",
+		"locale": "{locale, select, en {English} sk {Slovak} other {Unknown}}",
+		"locale-short": "{locale, select, en {EN} sk {SK} other {XX}}"
+	},
+	"navigation": {
+		"home": "Home",
+		"playground": "Playground"
+	},
+	"footer": {
+		"title": "Sorting Algorithm Visualizer",
+		"description": "Learn through interactive visualization",
+		"copyright": "All rights reserved."
+	},
+	"visualizer": {
+		"start": "Start Sorting",
+		"resume": "Resume",
+		"pause": "Pause",
+		"reset": "Reset",
+		"new-data": "New Data",
+		"speed": "Speed",
+		"select-algorithm": "Select Algorithm",
+		"unsorted": "Unsorted",
+		"comparing": "Comparing",
+		"pivot": "Pivot",
+		"current": "Current Element",
+		"sorted": "Sorted",
+		"length": "Length"
+	},
+	"algorithm-explanation": {
+		"stats": {
+			"title": "Statistics",
+			"iterations": "Iterations",
+			"swaps": "Swaps"
+		},
+		"complexity": {
+			"title": "Complexity Analysis",
+			"case": "Case",
+			"best": "Best",
+			"average": "Average",
+			"worst": "Worst",
+			"time": "Time",
+			"space": "Space"
+		},
+		"explanation": {
+			"title": "How It Works",
+			"steps": "Steps",
+			"cases": "Cases",
+			"code": "Code"
+		},
+		"bubble": {
+			"title": "Bubble Sort",
+			"description": "A simple comparison-based algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
+			"steps": [
+				"Start at the beginning of the array",
+				"Compare adjacent elements. If the first is greater than the second, swap them",
+				"Move to the next pair of elements and repeat the comparison and swap if necessary",
+				"After one complete pass, the largest element will be at the end. Repeat the process for the remaining elements"
+			],
+			"best-case": "When the array is already sorted, bubble sort makes only one pass through the array with no swaps.",
+			"average-case": "For random arrays, bubble sort still requires quadratic time.",
+			"worst-case": "When the array is sorted in reverse order, bubble sort must make the maximum number of comparisons and swaps."
+		},
+		"selection": {
+			"title": "Selection Sort",
+			"description": "A simple in-place comparison sorting algorithm that divides the input list into two parts: a sorted sublist and an unsorted sublist.",
+			"steps": [
+				"Find the minimum element in the unsorted part of the array",
+				"Swap it with the element at the beginning of the unsorted part",
+				"Move the boundary between the sorted and unsorted parts one element to the right",
+				"Repeat until the entire array is sorted"
+			],
+			"best-case": "Selection sort always performs the same number of comparisons regardless of the input array's order.",
+			"average-case": "For random arrays, selection sort requires quadratic time.",
+			"worst-case": "Selection sort always performs the same number of comparisons and swaps regardless of the input array's order."
+		},
+		"insertion": {
+			"title": "Insertion Sort",
+			"description": "A simple sorting algorithm that builds the final sorted array one item at a time, similar to how you might sort playing cards in your hand.",
+			"steps": [
+				"Start with the second element (assume the first element is already sorted)",
+				"Compare the current element with the previous elements",
+				"If the previous element is greater than the current element, move the previous element one position ahead",
+				"Repeat until the correct position for the current element is found, then insert it"
+			],
+			"best-case": "When the array is already sorted, insertion sort makes only one comparison per element.",
+			"average-case": "For random arrays, insertion sort requires quadratic time.",
+			"worst-case": "When the array is sorted in reverse order, insertion sort must shift each element to the beginning of the array."
+		},
+		"quicksort": {
+			"title": "Quick Sort",
+			"description": "An efficient, divide-and-conquer sorting algorithm that works by selecting a 'pivot' element and partitioning the array around the pivot.",
+			"steps": [
+				"Choose a pivot element from the array",
+				"Partition the array: items less than the pivot go to the left, items greater go to the right",
+				"The pivot is now in its final sorted position",
+				"Recursively apply the above steps to the sub-arrays on the left and right of the pivot",
+				"The base case is when a sub-array has 0 or 1 elements (already sorted)"
+			],
+			"best-case": "When the pivot always divides the array into nearly equal halves, quick sort achieves its best performance.",
+			"average-case": "For random arrays, quick sort is very efficient with O(n log n) time complexity.",
+			"worst-case": "When the pivot is always the smallest or largest element (e.g., in already sorted arrays), quick sort degrades to O(n²) performance."
+		}
+	}
 }
