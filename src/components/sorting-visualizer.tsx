@@ -267,7 +267,7 @@ export default function SortingVisualizer({
 				await sleep(getDelay());
 
 				// Compare and swap if needed
-				if (workingData[j]?.value > workingData[j + 1]?.value) {
+				if (workingData[j]!.value > workingData[j + 1]!.value) {
 					// Swap elements
 					const temp = workingData[j]!;
 					workingData[j] = workingData[j + 1]!;
@@ -350,7 +350,7 @@ export default function SortingVisualizer({
 				setIterations((prev) => prev + 1);
 				await sleep(getDelay());
 
-				if (workingData[j]?.value < workingData[minIdx]?.value) {
+				if (workingData[j]!.value < workingData[minIdx]!.value) {
 					// Reset previous minimum if it's not the initial position
 					if (minIdx !== i) {
 						workingData[minIdx]!.state = "default";
@@ -442,7 +442,7 @@ export default function SortingVisualizer({
 			}
 
 			// Store the current element to be inserted
-			const key = workingData[i]?.value;
+			const key = workingData[i]!.value;
 			const currentItem = { ...workingData[i]! };
 			currentItem.state = "comparing";
 
@@ -456,7 +456,7 @@ export default function SortingVisualizer({
 			let j = i - 1;
 
 			// Compare with each element in the sorted part
-			while (j >= 0 && workingData[j]?.value > key) {
+			while (j >= 0 && workingData[j]!.value > key) {
 				if (cancelRef.current) {
 					setIsSorting(false);
 					return;
@@ -542,7 +542,7 @@ export default function SortingVisualizer({
 
 		// Partition function for quicksort
 		const partition = async (left: number, right: number) => {
-			const pivotValue = workingData[right]?.value;
+			const pivotValue = workingData[right]!.value;
 			let i = left - 1;
 
 			// Highlight the pivot
@@ -561,7 +561,7 @@ export default function SortingVisualizer({
 				setIterations((prev) => prev + 1);
 				await sleep(getDelay());
 
-				if (workingData[j]?.value < pivotValue) {
+				if (workingData[j]!.value < pivotValue) {
 					i++;
 
 					// Highlight elements to be swapped
@@ -626,7 +626,7 @@ export default function SortingVisualizer({
 			setData([...workingData]);
 			setIterations((prev) => prev + 1);
 			await sleep(getDelay());
-			if (workingData[left]?.value > workingData[mid]?.value) {
+			if (workingData[left]!.value > workingData[mid]!.value) {
 				const temp = workingData[left]!;
 				workingData[left] = workingData[mid]!;
 				workingData[mid] = temp;
@@ -642,7 +642,7 @@ export default function SortingVisualizer({
 			setData([...workingData]);
 			setIterations((prev) => prev + 1);
 			await sleep(getDelay());
-			if (workingData[left]?.value > workingData[right]?.value) {
+			if (workingData[left]!.value > workingData[right]!.value) {
 				const temp = workingData[left]!;
 				workingData[left] = workingData[right]!;
 				workingData[right] = temp;
@@ -658,7 +658,7 @@ export default function SortingVisualizer({
 			setData([...workingData]);
 			setIterations((prev) => prev + 1);
 			await sleep(getDelay());
-			if (workingData[mid]?.value > workingData[right]?.value) {
+			if (workingData[mid]!.value > workingData[right]!.value) {
 				const temp = workingData[mid]!;
 				workingData[mid] = workingData[right]!;
 				workingData[right] = temp;

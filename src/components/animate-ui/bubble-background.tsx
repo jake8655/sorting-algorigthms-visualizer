@@ -139,6 +139,7 @@ function BubbleBackground({
 						ease: "linear",
 						repeat: Number.POSITIVE_INFINITY,
 						repeatType: "loop",
+						// @ts-expect-error Type problems
 						reverse: true,
 					}}
 				>

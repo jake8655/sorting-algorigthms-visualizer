@@ -156,9 +156,9 @@ const SlidingNumber = React.forwardRef<HTMLSpanElement, SlidingNumberProps>(
 				: prevIntStrRaw;
 
 		const adjustedPrevInt = React.useMemo(() => {
-			return prevIntStr.length > newIntStr?.length
-				? prevIntStr.slice(-newIntStr?.length)
-				: prevIntStr.padStart(newIntStr?.length, "0");
+			return prevIntStr.length > (newIntStr?.length ?? 0)
+				? prevIntStr.slice(-(newIntStr?.length ?? 0))
+				: prevIntStr.padStart(newIntStr?.length ?? 0, "0");
 		}, [prevIntStr, newIntStr]);
 
 		const adjustedPrevDec = React.useMemo(() => {
@@ -172,7 +172,7 @@ const SlidingNumber = React.forwardRef<HTMLSpanElement, SlidingNumberProps>(
 			if (isInView) prevNumberRef.current = effectiveNumber;
 		}, [effectiveNumber, isInView]);
 
-		const intDigitCount = newIntStr?.length;
+		const intDigitCount = newIntStr?.length ?? 0;
 		const intPlaces = React.useMemo(
 			() =>
 				Array.from(
