@@ -166,6 +166,7 @@ export default function HomePage() {
 									<BarChart3 className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.bubble-sort.description"),
+								queryParam: "bubble",
 							},
 							{
 								name: t("algorithms.selection-sort.title"),
@@ -173,6 +174,7 @@ export default function HomePage() {
 									<SortAsc className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.selection-sort.description"),
+								queryParam: "selection",
 							},
 							{
 								name: t("algorithms.insertion-sort.title"),
@@ -180,6 +182,7 @@ export default function HomePage() {
 									<Shuffle className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.insertion-sort.description"),
+								queryParam: "insertion",
 							},
 							{
 								name: t("algorithms.quick-sort.title"),
@@ -187,6 +190,7 @@ export default function HomePage() {
 									<Split className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.quick-sort.description"),
+								queryParam: "quicksort",
 							},
 						].map((algorithm, index) => (
 							<motion.div
@@ -196,7 +200,13 @@ export default function HomePage() {
 								transition={{ duration: 0.5, delay: index * 0.1 }}
 								viewport={{ once: true }}
 							>
-								<Link href="/playground" className="block">
+								<Link
+									href={{
+										pathname: "/playground",
+										query: { algorithm: algorithm.queryParam },
+									}}
+									className="block"
+								>
 									<div className="hover:-translate-y-1 group h-full rounded-xl bg-[oklch(0.208_0.042_265.755)] p-6 transition-all duration-300 hover:shadow-[oklch(0.929_0.013_255.508)/20] hover:shadow-lg">
 										<div className="mb-4 text-[oklch(0.929_0.013_255.508)]">
 											{algorithm.icon}
