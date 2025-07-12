@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	experimental: {
 		reactCompiler: true,
-		ppr: true,
 	},
 	typescript: {
 		ignoreBuildErrors: true,
