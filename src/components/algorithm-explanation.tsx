@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { Check, Copy, Loader2 } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type JSX, useState } from "react";
 import {
@@ -18,12 +17,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	type Algorithm,
-	cn,
-	codeHighlightOptions,
-	getAlgorithmCode,
-} from "@/lib/utils";
+import { type Algorithm, cn, getAlgorithmCode } from "@/lib/utils";
 import { RippleButton } from "./animate-ui/ripple-button";
 
 interface AlgorithmExplanationProps {
@@ -42,11 +36,6 @@ export default function AlgorithmExplanation({
 	className,
 }: AlgorithmExplanationProps) {
 	const t = useTranslations("algorithm-explanation");
-
-	const { data, isPending, isError } = useQuery({
-		...codeHighlightOptions(algorithm),
-		initialData: highlightedAlgorithmCode,
-	});
 
 	const [copied, setCopied] = useState<string | null>(null);
 
@@ -263,47 +252,35 @@ export default function AlgorithmExplanation({
 									</TabsContent>
 
 									<TabsContent value="code" className="group relative mt-4">
-										{isPending ? (
-											<p className="text-muted-foreground text-xs">
-												<Loader2 className="mx-auto animate-spin text-primary" />
-											</p>
-										) : isError ? (
-											<p className="text-muted-foreground text-xs">
-												There was an error loading the code.
-											</p>
-										) : (
-											data
-										)}
-										{data && (
-											<RippleButton
-												onClick={() => copyCode(getAlgorithmCode(algorithm))}
-												variant="ghost"
-												size="sm"
-												className={cn(
 													"absolute top-1 right-1 flex size-8 scale-0 items-center justify-center bg-background/60 p-0 transition-all duration-200 ease-snappy touch-only:group-focus-within:scale-100 touch-only:group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100",
-													copied === getAlgorithmCode(algorithm) &&
-														"scale-100 opacity-100",
-												)}
-												type="button"
-											>
-												<div className="relative size-4">
-													<Check
-														className={cn(
-															"absolute inset-0 scale-0 text-primary opacity-0 transition-all duration-200 ease-snappy",
-															copied === getAlgorithmCode(algorithm) &&
-																"scale-100 opacity-100",
-														)}
-													/>
-													<Copy
-														className={cn(
-															"absolute inset-0 scale-100 opacity-100 transition-all duration-200 ease-snappy",
-															copied === getAlgorithmCode(algorithm) &&
-																"scale-0 opacity-0",
-														)}
-													/>
-												</div>
-											</RippleButton>
-										)}
+										{highlightedAlgorithmCode}
+										<RippleButton
+											onClick={() => copyCode(getAlgorithmCode(algorithm))}
+											variant="ghost"
+											size="sm"
+											className={cn(
+												copied === getAlgorithmCode(algorithm) &&
+													"scale-100 opacity-100",
+											)}
+											type="button"
+										>
+											<div className="relative size-4">
+												<Check
+													className={cn(
+														"absolute inset-0 scale-0 text-primary opacity-0 transition-all duration-200 ease-snappy",
+														copied === getAlgorithmCode(algorithm) &&
+															"scale-100 opacity-100",
+													)}
+												/>
+												<Copy
+													className={cn(
+														"absolute inset-0 scale-100 opacity-100 transition-all duration-200 ease-snappy",
+														copied === getAlgorithmCode(algorithm) &&
+															"scale-0 opacity-0",
+													)}
+												/>
+											</div>
+										</RippleButton>
 									</TabsContent>
 								</TabsContents>
 							</Tabs>

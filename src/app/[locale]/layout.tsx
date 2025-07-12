@@ -4,9 +4,9 @@ import { type Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Footer from "@/components/footer";
 import Navigation from "@/components/navigation";
-import Providers from "@/components/providers";
 import { routing } from "@/i18n/routing";
 import "@/app/globals.css";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -54,13 +54,13 @@ export default async function LocaleLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} dark font-sans antialiased`}
 			>
-				<Providers>
+				<NuqsAdapter>
 					<NextIntlClientProvider>
 						<Navigation />
 						{children}
 						<Footer />
 					</NextIntlClientProvider>
-				</Providers>
+				</NuqsAdapter>
 			</body>
 		</html>
 	);
