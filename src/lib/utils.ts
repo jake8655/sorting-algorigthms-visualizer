@@ -12,13 +12,13 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const ALGORITMS = [
+export const ALGORITHMS = [
 	"bubble",
 	"selection",
 	"insertion",
 	"quicksort",
 ] as const;
-export type Algorithm = (typeof ALGORITMS)[number];
+export type Algorithm = (typeof ALGORITHMS)[number];
 
 export const playgroundSearchParams = {
 	algorithm: parseAsStringLiteral(ALGORITMS).withDefault("bubble"),
