@@ -82,6 +82,7 @@ export default function SortingVisualizer({
 
 	// Initialize data on component mount
 	useEffect(() => {
+		d3.select(svgRef.current).selectAll("*").remove();
 		generateRandomData(arrayLength);
 		return () => {
 			// Cleanup any animations on unmount
@@ -90,10 +91,6 @@ export default function SortingVisualizer({
 			}
 		};
 	}, [arrayLength, generateRandomData]);
-
-	useEffect(() => {
-		d3.select(svgRef.current).selectAll("*").remove();
-	}, [arrayLength]);
 
 	// Draw the visualization whenever data changes
 	useEffect(() => {
