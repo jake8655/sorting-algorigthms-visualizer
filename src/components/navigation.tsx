@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import LocaleSwitcher from "./locale-switcher";
@@ -66,7 +66,9 @@ export default function Navbar() {
 					</nav>
 
 					{/* Language Selector */}
-					<LocaleSwitcher className="pointer-events-auto" />
+					<Suspense fallback={null}>
+						<LocaleSwitcher className="pointer-events-auto" />
+					</Suspense>
 				</div>
 			</div>
 		</motion.header>
