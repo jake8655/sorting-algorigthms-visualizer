@@ -20,16 +20,28 @@ export default function Footer() {
 					</div>
 
 					<div className="flex space-x-4">
-						<FooterEntry href="mailto:info@dominiktoth.com">
+						<FooterEntry
+							href="mailto:info@dominiktoth.com"
+							platformName="Email"
+						>
 							<Mail className="text-white" />
 						</FooterEntry>
-						<FooterEntry href="https://github.com/jake8655">
+						<FooterEntry
+							href="https://github.com/jake8655"
+							platformName="GitHub"
+						>
 							<SiGithub className="text-white" />
 						</FooterEntry>
-						<FooterEntry href="https://discord.com/users/300963276223807488">
+						<FooterEntry
+							href="https://discord.com/users/300963276223807488"
+							platformName="Discord"
+						>
 							<SiDiscord className="text-discord-blue" />
 						</FooterEntry>
-						<FooterEntry href="https://bsky.app/profile/dominiktoth.com">
+						<FooterEntry
+							href="https://bsky.app/profile/dominiktoth.com"
+							platformName="Bluesky"
+						>
 							<SiBluesky className="text-bluesky-blue" />
 						</FooterEntry>
 					</div>
@@ -63,9 +75,11 @@ export default function Footer() {
 
 function FooterEntry({
 	href,
+	platformName,
 	children,
 }: {
 	href: string;
+	platformName: string;
 	children: React.ReactNode;
 }) {
 	return (
@@ -74,6 +88,7 @@ function FooterEntry({
 			target="_blank"
 			rel="noopener noreferrer"
 			className="flex gap-2 text-sm transition-transform hover:scale-110 md:text-base"
+			aria-label={`Contact Dominik Tóth via ${platformName}`}
 		>
 			{children}
 		</a>
