@@ -166,7 +166,7 @@ export default function HomePage() {
 									<BarChart3 className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.bubble-sort.description"),
-								queryParam: "bubble",
+								path: "bubble",
 							},
 							{
 								name: t("algorithms.selection-sort.title"),
@@ -174,7 +174,7 @@ export default function HomePage() {
 									<SortAsc className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.selection-sort.description"),
-								queryParam: "selection",
+								path: "selection",
 							},
 							{
 								name: t("algorithms.insertion-sort.title"),
@@ -182,7 +182,7 @@ export default function HomePage() {
 									<Shuffle className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.insertion-sort.description"),
-								queryParam: "insertion",
+								path: "insertion",
 							},
 							{
 								name: t("algorithms.quick-sort.title"),
@@ -190,7 +190,7 @@ export default function HomePage() {
 									<Split className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
 								),
 								description: t("algorithms.quick-sort.description"),
-								queryParam: "quicksort",
+								path: "quicksort",
 							},
 						].map((algorithm, index) => (
 							<motion.div
@@ -202,8 +202,7 @@ export default function HomePage() {
 							>
 								<Link
 									href={{
-										pathname: "/playground",
-										query: { algorithm: algorithm.queryParam },
+										pathname: `/playground/${algorithm.path}`,
 									}}
 									className="block"
 								>
