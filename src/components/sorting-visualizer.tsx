@@ -1,7 +1,7 @@
 "use client";
 
 import * as d3 from "d3";
-import { Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
+import { Loader2, Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useQueryState } from "nuqs";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,6 +14,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { useRouter } from "@/i18n/navigation";
 import { type Algorithm, cn, playgroundSearchParams } from "@/lib/utils";
 import { SlidingNumber } from "./animate-ui/sliding-number";
 
@@ -29,18 +30,18 @@ type NumberSetState = (val: ((prev: number) => number) | number) => void;
 
 export default function SortingVisualizer({
 	algorithm,
-	setAlgorithm,
 	setIterations,
 	setSwaps,
 	className,
 }: {
 	algorithm: Algorithm;
-	setAlgorithm: (algorithm: Algorithm) => void;
 	setIterations: NumberSetState;
 	setSwaps: NumberSetState;
 	className?: string;
 }) {
 	const t = useTranslations("visualizer");
+
+	const router = useRouter();
 
 	const [arrayLength, setArrayLength] = useQueryState(
 		"length",
@@ -835,7 +836,15 @@ export default function SortingVisualizer({
 
 					<Select
 						value={algorithm}
-						onValueChange={(val) => setAlgorithm(val as Algorithm)}
+						onValueChange={(val) =>
+							router.push({
+								pathname: `/playground/${val}`,
+								query: {
+									speed: speed,
+									length: arrayLength,
+								},
+							})
+						}
 						disabled={isSorting}
 					>
 						<SelectTrigger className="pointer-events-auto w-[180px]">
@@ -887,6 +896,90 @@ export default function SortingVisualizer({
 						disabled={isSorting}
 					/>
 					<SlidingNumber number={arrayLength} />
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export function VisualizerSkeleton({
+	algorithm,
+	className,
+}: {
+	algorithm: Algorithm;
+	className?: string;
+}) {
+	const t = useTranslations("visualizer");
+
+	return (
+		<div className={cn("flex w-full flex-col gap-6", className)}>
+			<div className="flex flex-wrap items-center justify-between gap-4">
+				<div className="flex gap-2">
+					<RippleButton variant="default" className="pointer-events-auto">
+						<Play className="mr-2 h-4 w-4" />
+						{t("start")}
+					</RippleButton>
+
+					<RippleButton variant="outline" className="pointer-events-auto">
+						<RotateCcw className="mr-2 h-4 w-4" />
+						{t("reset")}
+					</RippleButton>
+
+					<RippleButton variant="outline" className="pointer-events-auto">
+						<RefreshCw className="mr-2 h-4 w-4" />
+						{t("new-data")}
+					</RippleButton>
+				</div>
+
+				<div className="flex items-center gap-4">
+					<div className="pointer-events-auto flex items-center gap-2">
+						<span className="text-sm">{t("speed")}:</span>
+						<Slider value={[50]} min={1} max={100} step={1} className="w-32" />
+						<SlidingNumber number={50} />
+					</div>
+
+					<Select value={algorithm}>
+						<SelectTrigger className="pointer-events-auto w-[180px]">
+							<SelectValue placeholder={t("select-algorithm")} />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="bubble">Bubble Sort</SelectItem>
+							<SelectItem value="selection">Selection Sort</SelectItem>
+							<SelectItem value="insertion">Insertion Sort</SelectItem>
+							<SelectItem value="quicksort">Quick Sort</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+			</div>
+
+			<div className="pointer-events-auto flex min-h-[550px] w-full items-center justify-center rounded-lg border bg-card/50 p-4">
+				<Loader2 className="mx-auto size-64 animate-spin text-primary" />
+			</div>
+
+			<div className="mt-2 flex flex-wrap gap-4">
+				<div className="pointer-events-auto flex items-center gap-1">
+					<div className="h-4 w-4 rounded-sm bg-[#3B82F6]" />
+					<span className="text-sm">{t("unsorted")}</span>
+				</div>
+				<div className="pointer-events-auto flex items-center gap-1">
+					<div className="h-4 w-4 rounded-sm bg-[#FF5733]" />
+					<span className="text-sm">{t("comparing")}</span>
+				</div>
+				<div className="pointer-events-auto flex items-center gap-1">
+					<div className="h-4 w-4 rounded-sm bg-[#FFD700]" />
+					<span className="text-sm">
+						{algorithm === "quicksort" ? t("pivot") : t("current")}
+					</span>
+				</div>
+				<div className="pointer-events-auto flex items-center gap-1">
+					<div className="h-4 w-4 rounded-sm bg-[#33FF57]" />
+					<span className="text-sm">{t("sorted")}</span>
+				</div>
+
+				<div className="pointer-events-auto ml-auto flex items-center gap-2">
+					<span className="text-sm">{t("length")}:</span>
+					<Slider value={[20]} min={10} max={100} step={1} className="w-32" />
+					<SlidingNumber number={20} />
 				</div>
 			</div>
 		</div>

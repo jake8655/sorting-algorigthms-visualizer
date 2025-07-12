@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { type JSX, useState } from "react";
 import {
 	Tabs,
 	TabsContent,
@@ -30,6 +30,7 @@ interface AlgorithmExplanationProps {
 	algorithm: Algorithm;
 	iterations: number;
 	swaps: number;
+	highlightedAlgorithmCode: JSX.Element;
 	className?: string;
 }
 
@@ -37,13 +38,15 @@ export default function AlgorithmExplanation({
 	algorithm,
 	iterations,
 	swaps,
+	highlightedAlgorithmCode,
 	className,
 }: AlgorithmExplanationProps) {
 	const t = useTranslations("algorithm-explanation");
 
-	const { data, isPending, isError } = useQuery(
-		codeHighlightOptions(algorithm),
-	);
+	const { data, isPending, isError } = useQuery({
+		...codeHighlightOptions(algorithm),
+		initialData: highlightedAlgorithmCode,
+	});
 
 	const [copied, setCopied] = useState<string | null>(null);
 

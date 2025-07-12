@@ -1,10 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { type ClassValue, clsx } from "clsx";
-import {
-	createLoader,
-	parseAsInteger,
-	parseAsStringLiteral,
-} from "nuqs/server";
+import { createLoader, parseAsInteger } from "nuqs/server";
 import { twMerge } from "tailwind-merge";
 import { highlight } from "./highlight";
 
@@ -21,7 +17,6 @@ export const ALGORITHMS = [
 export type Algorithm = (typeof ALGORITHMS)[number];
 
 export const playgroundSearchParams = {
-	algorithm: parseAsStringLiteral(ALGORITMS).withDefault("bubble"),
 	speed: parseAsInteger.withDefault(50),
 	length: parseAsInteger.withDefault(20),
 };
