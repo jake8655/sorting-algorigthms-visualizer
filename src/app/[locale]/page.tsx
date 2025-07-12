@@ -9,11 +9,11 @@ import {
 	Split,
 } from "lucide-react";
 import { motion } from "motion/react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BubbleBackground } from "@/components/animate-ui/bubble-background";
 import { GradientText } from "@/components/animate-ui/gradient-text";
 import { RippleButton } from "@/components/animate-ui/ripple-button";
+import { Link } from "@/i18n/navigation";
 
 export default function HomePage() {
 	const t = useTranslations("home");
