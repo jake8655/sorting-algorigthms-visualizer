@@ -50,19 +50,25 @@ export default function Navbar() {
 					</Link>
 
 					{/* Navigation */}
-					<nav className="flex items-center space-x-8">
-						<NavLink
-							name="home"
-							href="/"
-							isActive={pathname === "/"}
-							className="pointer-events-auto"
-						/>
-						<NavLink
-							name="playground"
-							href="/playground"
-							isActive={pathname === "/playground"}
-							className="pointer-events-auto"
-						/>
+					<nav>
+						<ul className="flex items-center space-x-8">
+							<li>
+								<NavLink
+									name="home"
+									href="/"
+									isActive={pathname === "/"}
+									className="pointer-events-auto"
+								/>
+							</li>
+							<li>
+								<NavLink
+									name="playground"
+									href="/playground"
+									isActive={pathname === "/playground"}
+									className="pointer-events-auto"
+								/>
+							</li>
+						</ul>
 					</nav>
 
 					{/* Language Selector */}
