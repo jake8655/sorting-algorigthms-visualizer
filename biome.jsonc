@@ -5,7 +5,11 @@
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
-	"files": { "ignoreUnknown": false, "includes": ["**"] },
+	"files": {
+		"ignoreUnknown": true,
+		"includes": ["src/**/*.{ts,tsx}"],
+		"experimentalScannerIgnores": ["node_modules", ".next"]
+	},
 	"formatter": { "enabled": true },
 	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {

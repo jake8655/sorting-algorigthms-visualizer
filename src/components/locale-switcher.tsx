@@ -1,7 +1,7 @@
 "use client";
 
 import { Globe } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { type Locale, useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import { useIsMobile } from "@/hooks";
@@ -24,12 +24,22 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
 	const [isPending, startTransition] = useTransition();
 	const pathname = usePathname();
 	const params = useParams();
+	const searchParams = useSearchParams();
 
 	const isMobile = useIsMobile();
 
 	function onSelectChange(val: Locale) {
 		startTransition(() => {
-			router.replace({ pathname, query: params }, { locale: val });
+			router.replace(
+				{
+					pathname,
+					query: {
+						...params,
+						...Object.fromEntries(searchParams.entries()),
+					},
+				},
+				{ locale: val },
+			);
 		});
 	}
 
