@@ -39,6 +39,8 @@ function BubbleBackground({
 	},
 	...props
 }: BubbleBackgroundProps) {
+	const filterId = React.useId();
+
 	const isMobile = useIsMobile();
 
 	const containerRef = React.useRef<HTMLDivElement>(null);
@@ -97,7 +99,7 @@ function BubbleBackground({
 				style={{ transform: "translate3d(0, 0, 0)" }}
 			>
 				<defs>
-					<filter id="goo">
+					<filter id={filterId}>
 						<feGaussianBlur
 							in="SourceGraphic"
 							stdDeviation="10"
@@ -117,7 +119,7 @@ function BubbleBackground({
 			<div
 				className="absolute inset-0"
 				style={{
-					filter: isMobile ? "none" : "url(#goo) blur(40px)",
+					filter: isMobile ? "none" : `url(#${filterId}) blur(40px)`,
 					transform: "translate3d(0, 0, 0)",
 				}}
 			>

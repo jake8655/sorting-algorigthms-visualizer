@@ -1,40 +1,24 @@
-import { queryOptions } from "@tanstack/react-query";
 import { type ClassValue, clsx } from "clsx";
-import {
-	createLoader,
-	parseAsInteger,
-	parseAsStringLiteral,
-} from "nuqs/server";
+import { createLoader, parseAsInteger } from "nuqs/server";
 import { twMerge } from "tailwind-merge";
-import { highlight } from "./highlight";
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const ALGORITMS = [
+export const ALGORITHMS = [
 	"bubble",
 	"selection",
 	"insertion",
 	"quicksort",
 ] as const;
-export type Algorithm = (typeof ALGORITMS)[number];
+export type Algorithm = (typeof ALGORITHMS)[number];
 
 export const playgroundSearchParams = {
-	algorithm: parseAsStringLiteral(ALGORITMS).withDefault("bubble"),
 	speed: parseAsInteger.withDefault(50),
 	length: parseAsInteger.withDefault(20),
 };
 export const loadSearchParams = createLoader(playgroundSearchParams);
-
-export function codeHighlightOptions(algorithm: Algorithm) {
-	return queryOptions({
-		queryKey: ["code-highlight", algorithm],
-		queryFn: () => {
-			return highlight(getAlgorithmCode(algorithm), "ts");
-		},
-	});
-}
 
 export function getAlgorithmCode(algorithm: Algorithm): string {
 	switch (algorithm) {

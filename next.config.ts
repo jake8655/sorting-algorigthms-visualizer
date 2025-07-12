@@ -6,16 +6,24 @@ import createNextIntlPlugin from "next-intl/plugin";
  * for Docker builds.
  */
 import "@/env";
+import { routing } from "@/i18n/routing";
 
 const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	experimental: {
 		reactCompiler: true,
-		ppr: true,
 	},
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+
+  async redirects() {
+    return [...routing.locales.map(locale => ({
+      source: `/${locale}/playground`,
+      destination: `/${locale}/playground/bubble`,
+      permanent: true,
+    }))]
+  }
 };
 
 const withNextIntl = createNextIntlPlugin();

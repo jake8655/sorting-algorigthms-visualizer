@@ -2,8 +2,9 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
+import { useSelectedLayoutSegment } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import LocaleSwitcher from "./locale-switcher";
@@ -49,23 +50,31 @@ export default function Navbar() {
 					</Link>
 
 					{/* Navigation */}
-					<nav className="flex items-center space-x-8">
-						<NavLink
-							name="home"
-							href="/"
-							isActive={pathname === "/"}
-							className="pointer-events-auto"
-						/>
-						<NavLink
-							name="playground"
-							href="/playground"
-							isActive={pathname === "/playground"}
-							className="pointer-events-auto"
-						/>
+					<nav>
+						<ul className="flex items-center space-x-8">
+							<li>
+								<NavLink
+									name="home"
+									href="/"
+									isActive={pathname === "/"}
+									className="pointer-events-auto"
+								/>
+							</li>
+							<li>
+								<NavLink
+									name="playground"
+									href="/playground"
+									isActive={pathname === "/playground"}
+									className="pointer-events-auto"
+								/>
+							</li>
+						</ul>
 					</nav>
 
 					{/* Language Selector */}
-					<LocaleSwitcher className="pointer-events-auto" />
+					<Suspense fallback={null}>
+						<LocaleSwitcher className="pointer-events-auto" />
+					</Suspense>
 				</div>
 			</div>
 		</motion.header>
@@ -75,7 +84,6 @@ export default function Navbar() {
 function NavLink({
 	name,
 	href,
-	isActive,
 	className,
 }: {
 	name: "home" | "playground";
@@ -85,8 +93,13 @@ function NavLink({
 }) {
 	const t = useTranslations("navigation");
 
+	const selectedLayoutSegment = useSelectedLayoutSegment();
+	const pathname = selectedLayoutSegment ? `/${selectedLayoutSegment}` : "/";
+	const isActive = pathname === href;
+
 	return (
 		<Link
+			aria-current={isActive ? "page" : undefined}
 			href={href}
 			className={cn(
 				"relative px-1 py-2 font-medium text-[oklch(0.984_0.003_247.858)] transition-all",
@@ -97,7 +110,8 @@ function NavLink({
 			{t(name)}
 			{isActive && (
 				<motion.div
-					className="absolute bottom-0 left-0 h-0.5 w-full bg-primary"
+					className="absolute right-0 bottom-0 left-0 h-0.5 bg-primary"
+					style={{ originY: "0px" }}
 					layoutId="navbar-indicator"
 					transition={{ type: "spring", duration: 0.5 }}
 				/>
