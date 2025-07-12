@@ -110,7 +110,8 @@ function NavLink({
 			{t(name)}
 			{isActive && (
 				<motion.div
-					className="absolute bottom-0 left-0 h-0.5 w-full bg-primary"
+					className="absolute right-0 bottom-0 left-0 h-0.5 bg-primary"
+					style={{ originY: "0px" }}
 					layoutId="navbar-indicator"
 					transition={{ type: "spring", duration: 0.5 }}
 				/>
