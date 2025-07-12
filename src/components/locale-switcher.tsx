@@ -41,6 +41,7 @@ export default function LocaleSwitcher({ className }: { className?: string }) {
 					isPending && "transition-opacity [&:disabled]:opacity-30",
 					className,
 				)}
+				aria-label={t("label")}
 			>
 				<SelectValue placeholder={t("label")} />
 			</SelectTrigger>
