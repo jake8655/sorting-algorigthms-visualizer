@@ -252,13 +252,13 @@ export default function AlgorithmExplanation({
 									</TabsContent>
 
 									<TabsContent value="code" className="group relative mt-4">
-													"absolute top-1 right-1 flex size-8 scale-0 items-center justify-center bg-background/60 p-0 transition-all duration-200 ease-snappy touch-only:group-focus-within:scale-100 touch-only:group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100",
 										{highlightedAlgorithmCode}
 										<RippleButton
 											onClick={() => copyCode(getAlgorithmCode(algorithm))}
 											variant="ghost"
 											size="sm"
 											className={cn(
+												"absolute top-1 right-1 flex size-8 scale-0 items-center justify-center bg-background/60 p-0 transition-all duration-200 ease-snappy focus-visible:scale-100 focus-visible:opacity-100 touch-only:group-focus-within:scale-100 touch-only:group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100",
 												copied === getAlgorithmCode(algorithm) &&
 													"scale-100 opacity-100",
 											)}
